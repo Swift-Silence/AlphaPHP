@@ -25,7 +25,8 @@ class Logger {
      * @param  object $class   The class calling the logger
      * @param  string $message Message being logged
      */
-    public static function log($class, $message) {
+    public static function log($class, $message)
+    {
         if (!Config::singleton()->get('LOGGING')) return;
 
         if (empty(static::$log)) {
@@ -34,6 +35,22 @@ class Logger {
 
         $class = is_object($class) ? get_class($class) : basename($class);
         static::$log[] = "<strong>{$class}</strong>: {$message}\n";
+    }
+
+    /**
+     * Adds an empty line to the log
+     * @param  mixed   $class Object or string that gets logged with the line. Optional.
+     * @param  integer $n     How many empty lines to add
+     */
+    public static function _($class = ".", $n = 1)
+    {
+        if (!Config::singleton()->get('LOGGING')) return;
+
+        $class = is_object($class) ? get_class($class) : basename($class);
+        for ($i = 0; $i < $n; $i++)
+        {
+            static::$log[] = "<strong>{$class}</strong>: .\n";
+        }
     }
 
     /**
