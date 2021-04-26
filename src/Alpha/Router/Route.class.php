@@ -28,7 +28,7 @@ class Route
 
         foreach ($route as $c => $a)
         {
-            $this->controller = $c;
+            $this->controller = str_replace('.', '\\', $c);
             $this->action = $a;
         }
 

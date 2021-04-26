@@ -31,6 +31,9 @@ class Controller
         $this->Session = new SessionHandler();
 
         $this->Model = new ModelManager();
+
+        Logger::log(__CLASS__, "Dependencies loaded! Executing application...");
+        Logger::_(__CLASS__, 3);
     }
 
     protected function log($message)
