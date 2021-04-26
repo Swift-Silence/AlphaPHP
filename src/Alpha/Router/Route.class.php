@@ -59,7 +59,7 @@ class Route
         try {
             $this->Ctrl = new $controller();
         } catch (\Throwable $e) {
-            Logger::log($this, "[<b>{$this->path}</b>] Unable to instantiate controller <b>{$this->controller}</b>: " . $e->getMessage());
+            Logger::log($this, "[<b>{$this->path}</b>] Unable to instantiate controller <b>{$this->controller}</b>: " . $e->getMessage() . " [" . $e->getFile() . ":" . $e->getLine() . "]");
             Logger::dump(1);
         }
 
