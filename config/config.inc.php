@@ -44,11 +44,14 @@ $Config = \Alpha\Core\Config::singleton();
 $Config->set('LOGGING', true); # D
 $Config->set('PRINT_LOG_AFTER_EACH_RUN', true); # D
 
+// Error Handling
+$Config->set('404_PATH', '/404');
+
 
 ## ================= DO NOT EDIT BELOW THIS LINE ========================= ##
 
 
-\Alpha\Debug\Logger::log(__FILE__, "Initial config and autoloader loaded.");
+\Alpha\Debug\Logger::log(__FILE__, "Initial config and autoloaders loaded.");
 
 try
 {

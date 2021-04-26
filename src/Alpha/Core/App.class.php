@@ -18,6 +18,8 @@ class App {
         Logger::log($this, "Application object instantiated.");
 
         $this->Router = new Router();
+
+        $this->Router->execute();
     }
 
 }
