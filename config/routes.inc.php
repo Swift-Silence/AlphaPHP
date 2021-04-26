@@ -1,7 +1,11 @@
 <?php
 
+use \Alpha\Core\Config;
+
 use \Alpha\Router\Route;
 use \Alpha\Router\Router;
+
+$Config = Config::singleton();
 
 \Alpha\Debug\Logger::log(__FILE__, "Loading in application routes..."); #LOG
 
@@ -9,16 +13,31 @@ use \Alpha\Router\Router;
 
 ## ==================== BEGIN REQUIRED ROUTES ==================== ##
 
-# Main Controller Routes
+
+
+# Home Controller Routes
 Router::add(
-    new Route('/', ['Main' => 'Index'])
+    new Route('/',           ['Alpha\\Main' => 'Index']), # Cannot pass parameters to this
+    new Route('/home',       ['Alpha\\Main' => 'Index']),
+    new Route('/home/index', ['Alpha\\Main' => 'Index'])
 );
 
 # 1-Page Error Controller Routes
 Router::add(
-    new Route('/404', ['Errors' => 'PageNotFound']) # Must be defined, or app will break if a route is not located
+    new Route($Config->get('404_PATH'), ['Errors' => 'PageNotFound']) # Must be defined, or app will break if a route is not located
 );
 
 
 
 ## ==================== BEGIN CUSTOM ROUTES ==================== ##
+
+
+
+
+
+
+
+## ==================== END CUSTOM ROUTES ==================== ##
+
+
+\Alpha\Debug\Logger::log(__FILE__, "Application routes loaded.");

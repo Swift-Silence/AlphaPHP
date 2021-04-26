@@ -15,6 +15,8 @@ class Route
     private $controller;
     private $action;
 
+    private $Ctrl;
+
     public function __construct($path, array $route)
     {
         if (count($route) > 1 || count($route) < 1)
@@ -30,7 +32,7 @@ class Route
             $this->action = $a;
         }
 
-        Logger::log($this, "Route <strong>{$path}</strong> \t--> <strong>['{$this->controller}' => '{$this->action}']</strong> created.");
+        Logger::log($this, "Route <strong>{$path}</strong> --> <strong>['{$this->controller}' => '{$this->action}']</strong> created.");
     }
 
     public function getPath()
@@ -46,6 +48,22 @@ class Route
     public function getAction()
     {
         return $this->action;
+    }
+
+    public function execute($params)
+    {
+        Logger::log($this, "Attempting to instantiate controller...");
+
+        $controller = "Controllers\\" . $this->controller;
+
+        try {
+            $this->Ctrl = new $controller();
+        } catch (\Throwable $e) {
+            Logger::log($this, "[<b>{$this->path}</b>] Unable to instantiate controller <b>{$this->controller}</b>: " . $e->getMessage());
+            Logger::dump(1);
+        }
+
+        return call_user_func_array([$this->Ctrl, $this->action], $params);
     }
 
 }
