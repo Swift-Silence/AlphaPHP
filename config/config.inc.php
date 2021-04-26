@@ -53,6 +53,7 @@ $Config->set('404_PATH', '/404');
 
 \Alpha\Debug\Logger::log(__FILE__, "Initial config and autoloaders loaded.");
 
+// Require the routes.inc.php file, but catch any framework exceptions and dump the log.
 try
 {
     require (CONFIG . DS . 'routes.inc.php');

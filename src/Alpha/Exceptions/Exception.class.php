@@ -2,13 +2,25 @@
 
 namespace Alpha\Exceptions;
 
-
+/**
+ * Core Exception class
+ *
+ * All AlphaPHP exceptions extend this, and allows the log to be dumped via a
+ * caught object. Also automatically logs the error message, including the
+ * filename and line the error was thrown.
+ */
 
 use \Alpha\Debug\Logger;
 
 class Exception extends \Exception
 {
 
+    /**
+     * Log error and pass to parent constructor.
+     * @param string  $message  Error message
+     * @param integer $code     Error code
+     * @param \Exception        Previous exception
+     */
     public function __construct($message, $code = 0, $previous = null)
     {
         $file = $this->getFile();
@@ -24,6 +36,9 @@ class Exception extends \Exception
         parent::__construct($message, $code, $previous);
     }
 
+    /**
+     * Dumps the whole log from \Alpha\Debug\Logger
+     */
     public function dumpLog()
     {
         Logger::dump(true);

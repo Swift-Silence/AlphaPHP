@@ -32,6 +32,7 @@ $req_route = str_replace(
 $req_route = substr($req_route, 0, strpos($req_route, '?'));
 define('REQUEST_ROUTE', $req_route);
 
+// Establish HTTP_HOST for easy access. Falls back to SERVER_NAME if HTTP_HOST index is not set.
 $http_host = (isset($_SERVER['HTTP_HOST']) && !empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
 define('HTTP_HOST', $http_host);
 
@@ -41,10 +42,16 @@ define('HTTP_HOST', $http_host);
 
 require(CWD . DS . 'config' . DS . 'config.inc.php');
 
+
+
+/**
+ * Run the application
+ */
+
 $app = new App();
 
-
-
+// Debug logger code - Only runs when logging is enabled and only dumps if configuration
+// is set for it.
 \Alpha\Debug\Logger::log(__FILE__, "Application execution finished. Printing log...");
 if (\Alpha\Core\Config::singleton()->get('PRINT_LOG_AFTER_EACH_RUN'))
     \Alpha\Debug\Logger::dump();

@@ -2,15 +2,26 @@
 
 namespace Alpha\Networking\Request;
 
-
+/**
+ * SessionHandler class
+ *
+ * Helps handle all session requests.
+ */
 
 use Alpha\Debug\Logger;
 
 class SessionHandler
 {
 
+    /**
+     * Holds all session data.
+     * @var array
+     */
     private $SESSION = [];
 
+    /**
+     * Logs instantiation and reads the session data.
+     */
     public function __construct()
     {
         Logger::log($this, "Session handler object instantiated.");
@@ -18,6 +29,9 @@ class SessionHandler
         $this->readSessionData();
     }
 
+    /**
+     * Reads all session data and logs their values.
+     */
     private function readSessionData()
     {
         Logger::log($this, "Reading <b>SESSION</b> data...");

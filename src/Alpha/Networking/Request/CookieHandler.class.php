@@ -2,15 +2,24 @@
 
 namespace Alpha\Networking\Request;
 
-
+/**
+ * CookieHandler class
+ */
 
 use \Alpha\Debug\Logger;
 
 class CookieHandler
 {
 
+    /**
+     * Holds all cookie data
+     * @var array
+     */
     private $COOKIE = [];
 
+    /**
+     * Logs instantiation and then reads the cookie data.
+     */
     public function __construct()
     {
         Logger::log($this, "Cookie handler object instantiated.");
@@ -18,6 +27,9 @@ class CookieHandler
         $this->readCookieData();
     }
 
+    /**
+     * Reads all cookie data and logs all findings.
+     */
     private function readCookieData()
     {
         Logger::log($this, "Reading <b>COOKIE</b> data...");
