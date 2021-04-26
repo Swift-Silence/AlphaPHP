@@ -4,6 +4,8 @@ namespace Alpha\Core;
 
 
 
+use \Alpha\Core\ModelManager;
+
 use \Alpha\Debug\Logger;
 
 use \Alpha\Networking\Request;
@@ -14,6 +16,10 @@ class Controller
 {
 
     protected $Request;
+    protected $Cookie;
+    protected $Session;
+
+    protected $Model;
 
     public function __construct()
     {
@@ -23,6 +29,8 @@ class Controller
         $this->Request = new Request();
         $this->Cookie  = new CookieHandler();
         $this->Session = new SessionHandler();
+
+        $this->Model = new ModelManager();
     }
 
     protected function log($message)

@@ -26,7 +26,7 @@ class Router
             echo '<h1>404!</h1>';
             //Logger::dump(true);
 
-            //Networking::redirect('/404');
+            Networking::redirect('/404');
         }
     }
 
