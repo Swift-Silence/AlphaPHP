@@ -7,6 +7,8 @@ namespace Alpha\Core;
 use \Alpha\Debug\Logger;
 
 use \Alpha\Networking\Request;
+use \Alpha\Networking\Request\CookieHandler;
+use \Alpha\Networking\Request\SessionHandler;
 
 class Controller
 {
@@ -19,6 +21,8 @@ class Controller
 
         Logger::log(__CLASS__, "Loading in dependencies...");
         $this->Request = new Request();
+        $this->Cookie  = new CookieHandler();
+        $this->Session = new SessionHandler();
     }
 
     protected function log($message)

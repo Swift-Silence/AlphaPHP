@@ -2,6 +2,9 @@
 
 use \Alpha\Core\App;
 
+session_start();
+ob_start();
+
 /**
  * Autodetects the directory and splits up into several constants
  */
@@ -21,11 +24,13 @@ define('CWD', __DIR__);
 // Gets route to application relative to document root, and then gets the MVC
 // request route.
 $route_to_application = str_replace(DOCUMENT_ROOT, '', CWD);
-define('REQUEST_ROUTE', str_replace(
+$req_route = str_replace(
     str_replace("\\", "/", $route_to_application) . '/',
     '',
     REQUEST_URI
-));
+);
+$req_route = substr($req_route, 0, strpos($req_route, '?'));
+define('REQUEST_ROUTE', $req_route);
 
 $http_host = (isset($_SERVER['HTTP_HOST']) && !empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
 define('HTTP_HOST', $http_host);
