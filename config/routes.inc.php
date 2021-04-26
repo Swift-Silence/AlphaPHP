@@ -9,9 +9,11 @@ use \Alpha\Router\Router;
 
 ## ==================== BEGIN REQUIRED ROUTES ==================== ##
 
-# Main Controller Routes
+# Home Controller Routes
 Router::add(
-    new Route('/', ['Main' => 'Index'])
+    new Route('/',           ['Main' => 'Index']), # Cannot pass parameters to this 
+    new Route('/home',       ['Main' => 'Index']),
+    new Route('/home/index', ['Main' => 'Index'])
 );
 
 # 1-Page Error Controller Routes

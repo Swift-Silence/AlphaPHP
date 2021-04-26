@@ -30,11 +30,11 @@ class Logger {
         if (!Config::singleton()->get('LOGGING')) return;
 
         if (empty(static::$log)) {
-            static::$log[] = "<strong>" . __CLASS__ . "</strong>: Logger enabled.\n";
+            static::$log[] = "<strong>" . static::getTimestamp() . " " . __CLASS__ . "</strong>: Logger enabled.\n";
         }
 
         $class = is_object($class) ? get_class($class) : basename($class);
-        static::$log[] = "<strong>{$class}</strong>: {$message}\n";
+        static::$log[] = "<strong>" . static::getTimestamp() . " {$class}</strong>: {$message}\n";
     }
 
     /**
@@ -49,7 +49,7 @@ class Logger {
         $class = is_object($class) ? get_class($class) : basename($class);
         for ($i = 0; $i < $n; $i++)
         {
-            static::$log[] = "<strong>{$class}</strong>: .\n";
+            static::$log[] = "<strong>" . static::getTimestamp() . " {$class}</strong>: ...\n";
         }
     }
 
@@ -68,6 +68,16 @@ class Logger {
 
         echo "</pre>";
         if ($die) die();
+    }
+
+    /**
+     * Returns the current timestamp
+     * @return string Formatted date string
+     */
+    private static function getTimestamp()
+    {
+        $format = "[F j, Y][G:i:s]";
+        return date($format, time());
     }
 
 }

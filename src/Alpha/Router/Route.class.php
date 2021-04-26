@@ -30,7 +30,7 @@ class Route
             $this->action = $a;
         }
 
-        Logger::log($this, "Route <strong>{$path}</strong> \t--> <strong>['{$this->controller}' => '{$this->action}']</strong> created.");
+        Logger::log($this, "Route <strong>{$path}</strong> --> <strong>['{$this->controller}' => '{$this->action}']</strong> created.");
     }
 
     public function getPath()
@@ -46,6 +46,11 @@ class Route
     public function getAction()
     {
         return $this->action;
+    }
+
+    public function execute($params)
+    {
+
     }
 
 }

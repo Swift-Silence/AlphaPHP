@@ -10,6 +10,7 @@ class Router
 {
 
     private $route = [];
+    private $params = [];
 
     private static $routes = [];
 
@@ -37,10 +38,14 @@ class Router
 
             if (isset(static::$routes[$path]))
             {
+                $this->params = explode('/', str_replace($path . '/', '', '/' . REQUEST_ROUTE));
+                //die(print_r($this->params));
+
                 $this->route = static::$routes[$path];
+                Logger::_($this, 3);
                 Logger::log($this, "Determined route request to be <strong>{$path}</strong>");
-                Logger::log($this, "Controller Name: <b>" . $this->route->getController() . "</b>");
-                Logger::log($this, "Method Name: <b>" . $this->route->getAction() . "</b>");
+                Logger::log($this, "\tController Name: <b>" . $this->route->getController() . "</b>");
+                Logger::log($this, "\tMethod Name: <b>" . $this->route->getAction() . "</b>");
                 return true;
             }
             else
@@ -49,6 +54,7 @@ class Router
             }
         }
 
+        Logger::_($this, 3);
         Logger::log($this, "Route not determined from <strong>/" . REQUEST_ROUTE . "</strong>.");
         return false;
     }
