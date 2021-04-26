@@ -11,9 +11,9 @@ class Networking
     {
         $root = rtrim(str_replace(REQUEST_ROUTE, '', REQUEST_URI), '/');
 
-        //die($root . $fw_path);
+        //die(HTTP_HOST . $root . $fw_path);
 
-        header('Location: /' . $root . $fw_path);
+        header('Location: http://' . HTTP_HOST . $root . $fw_path);
     }
 
 }

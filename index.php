@@ -27,6 +27,9 @@ define('REQUEST_ROUTE', str_replace(
     REQUEST_URI
 ));
 
+$http_host = (isset($_SERVER['HTTP_HOST']) && !empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];
+define('HTTP_HOST', $http_host);
+
 /**
  * Required files to initiate framework
  */
