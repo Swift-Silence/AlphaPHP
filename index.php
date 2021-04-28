@@ -18,7 +18,7 @@ define('DOCUMENT_ROOT', $_SERVER['DOCUMENT_ROOT']);
 // Define requiest URI for easy access
 define('REQUEST_URI', $_SERVER['REQUEST_URI']);
 
-// Define current working directory for easy access
+// Define current working directory for easy access 
 define('CWD', __DIR__);
 
 // Gets route to application relative to document root, and then gets the MVC
@@ -41,14 +41,18 @@ define('HTTP_HOST', $http_host);
  */
 
 require(CWD . DS . 'config' . DS . 'config.inc.php');
-
-
+echo "<pre>" . print_r(error_get_last(), true);
+//phdpinfo();
 
 /**
  * Run the application
  */
 
 $app = new App();
+
+interface a {
+    public function b();
+}
 
 // Debug logger code - Only runs when logging is enabled and only dumps if configuration
 // is set for it.

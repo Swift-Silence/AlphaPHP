@@ -9,28 +9,38 @@ namespace Alpha\Data;
  * to certain functions.
  */
 
-use \Alpha\Data\SQL\Table;
+use \Alpha\Data\SQL\DB;
+use \Alpha\Data\SQL\TableManager;
 
 use \Alpha\Debug\Logger;
+
+
 
 class Model
 {
 
+    public $DB;
+
     /**
-     * Database table object
-     * @var \Alpha\Data\SQL\Table|null
+     * Table manager object
+     * @var \Alpha\Data\SQL\TableManager
      */
     protected $Table;
 
     /**
      * Must run before any child model constructor code runs.
-     * @param boolean $create_table Whether or not this model should create and represent a database table.
      */
-    public function __construct($create_table = false)
+    public function __construct()
     {
         Logger::log($this, "Initializing...");
 
-        if ($create_table) $this->Table = new Table();
+        $this->DB = DB::singleton();
+        $this->Table = new TableManager();
+    }
+
+    public function log($message)
+    {
+        Logger::log($this, "$message");
     }
 
 }

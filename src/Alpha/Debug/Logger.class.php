@@ -19,6 +19,25 @@ class Logger {
      */
     private static $log = [];
 
+    private static $framework_classes = [
+        'Alpha\\Debug\\Logger',
+        'Alpha\\Core\\Config',
+        'Alpha\\Router\\Route',
+        'config.inc.php',
+        'routes.inc.php',
+        'Alpha\\Core\\App',
+        'Alpha\\Router\\Router',
+        //'Alpha\\Core\\Controller',
+        'Alpha\\Networking\\Request',
+        'Alpha\\Networking\\Request\\CookieHandler',
+        'Alpha\\Networking\\Request\\SessionHandler',
+        'Alpha\\Core\\ModelManager',
+        'Alpha\\Data\\SQL\\DB',
+        'Alpha\\Data\\SQL\\TableManager',
+        'Alpha\\Data\\SQL\\Table',
+        'Alpha\\Data\\SQL\\Table\\TableBuilder'
+    ];
+
     /**
      * Adds to the log
      *
@@ -29,11 +48,14 @@ class Logger {
     {
         if (!Config::singleton()->get('LOGGING')) return;
 
+        $class = is_object($class) ? get_class($class) : basename($class);
+
+        if (in_array($class, static::$framework_classes) && !Config::singleton()->get('SHOW_FRAMEWORK_LOGS')) return;
+
         if (empty(static::$log)) {
             static::$log[] = "<strong>" . static::getTimestamp() . " " . __CLASS__ . "</strong>: Logger enabled.\n";
         }
 
-        $class = is_object($class) ? get_class($class) : basename($class);
         static::$log[] = "<strong>" . static::getTimestamp() . " {$class}</strong>: {$message}\n";
     }
 

@@ -65,7 +65,7 @@ class Controller
 
     /**
      * Provides easy access to log controller-level messages.
-     * @param  string $message Message to log to the logging system.
+     * @param  string $message Message to log to the logging system.    
      */
     protected function log($message)
     {

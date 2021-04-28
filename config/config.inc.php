@@ -42,7 +42,14 @@ $Config = \Alpha\Core\Config::singleton();
 
 // Debug options
 $Config->set('LOGGING', true); # D
+$Config->set('SHOW_FRAMEWORK_LOGS', true); # D
 $Config->set('PRINT_LOG_AFTER_EACH_RUN', true); # D
+
+// Database settings
+$Config->set('DB_HOST',     '127.0.0.1');
+$Config->set('DB_USER',     'root');
+$Config->set('DB_PASSWORD', 'tylerboo22');
+$Config->set('DB_DB',       'alphaphp');
 
 // Error Handling
 $Config->set('404_PATH', '/404');

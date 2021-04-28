@@ -32,7 +32,14 @@ class ModelManager
     {
         $model_name = str_replace('.', '\\', $model_name);
 
-        Logger::log($this, "Retrieving model <b>{$model_name}</b>...\n\nParams:\n" . print_r($params, true));
+        $s_params = "";
+        foreach ($params as $param)
+        {
+            $s_params .= "$param, ";
+        }
+        $s_params = substr(rtrim($s_params), 0, -1);
+
+        Logger::log($this, "Retrieving model <b>[{$model_name}] <i>[Params: {$s_params}]</i></b>...");
 
         $ns_name = "Models\\{$model_name}";
         return new $ns_name($params);

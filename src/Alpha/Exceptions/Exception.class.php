@@ -39,9 +39,17 @@ class Exception extends \Exception
     /**
      * Dumps the whole log from \Alpha\Debug\Logger
      */
-    public function dumpLog()
+    public function dumpLog() // Deprecated
     {
         Logger::dump(true);
+    }
+
+    /**
+     * Alias for dumpLog()
+     */
+    public function dump()
+    {
+        $this->dumpLog();
     }
 
 }
