@@ -102,8 +102,26 @@ class Logger {
      */
     private static function getTimestamp()
     {
-        $format = "[F j, Y][G:i:s]";
+        $format = "[F j, Y][G:i:s." . static::milliseconds(true) . "]";
         return date($format, time());
+    }
+
+    /**
+     * Returns milliseconds since unix epoch
+     * @param  boolean $mod Whether to perform ms % 1000 to get ms since last second.
+     * @return int          Milliseconds
+     */
+    private static function milliseconds($mod = false)
+    {
+        $mt = explode(' ', microtime());
+        $val = ((int)$mt[1]) * 1000 + ((int)round($mt[0] * 1000));
+
+        $modval = $val % 1000;
+        if ($modval < 100) $modval = "0" . $modval;
+        else if ($modval < 10) $modval = "00" . $modval;
+        else if ($modval == 0) $modval = "000";
+
+        return ($mod) ? $modval : $val;
     }
 
 }
