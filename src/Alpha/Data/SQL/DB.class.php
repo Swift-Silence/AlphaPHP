@@ -38,6 +38,7 @@ class DB
     }
 
 
+
     /**
      * MySQL host
      * @var string
@@ -109,14 +110,25 @@ class DB
         $this->log("Query executed.", true);
     }
 
+    /**
+     * Method for checking if a table exists in the database.
+     * @param  string  $table_name Name of the table to be looked for.
+     * @return boolean
+     */
     public function hasTable($table_name)
     {
         $sql = "SELECT 1 FROM `{$table_name}` LIMIT 1";
 
         $this->query($sql);
-        return $this->stmt;
+        return (bool) $this->stmt;
     }
 
+    /**
+     * Method for creating a table in the database. Takes cols as an array of objects.
+     * @param  string $table_name SQL Table name
+     * @param  array  $cols       Array of column object
+     * @return \PDOStatement
+     */
     public function createTable($table_name, $cols)
     {
         $sql = "CREATE TABLE `$table_name` (";

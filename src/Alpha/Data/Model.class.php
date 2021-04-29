@@ -38,6 +38,10 @@ class Model
         $this->Table = new TableManager();
     }
 
+    /**
+     * Protected log function for ease of access by models.
+     * @param  string $message Message to send to the logger.
+     */
     public function log($message)
     {
         Logger::log($this, "$message");

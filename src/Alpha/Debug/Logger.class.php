@@ -19,6 +19,10 @@ class Logger {
      */
     private static $log = [];
 
+    /**
+     * List of framework classes to exclude if Config setting SHOW_FRAMEWORK_LOGS is set to false.
+     * @var array
+     */
     private static $framework_classes = [
         'Alpha\\Debug\\Logger',
         'Alpha\\Core\\Config',
@@ -50,10 +54,10 @@ class Logger {
 
         $class = is_object($class) ? get_class($class) : basename($class);
 
-        if (in_array($class, static::$framework_classes) && !Config::singleton()->get('SHOW_FRAMEWORK_LOGS')) return;
+        if (in_array($class, static::$framework_classes) && !Config::singleton()->get('SHOW_FRAMEWORK_LOGS')) return; // Cancel if log comes from a framework class.
 
         if (empty(static::$log)) {
-            static::$log[] = "<strong>" . static::getTimestamp() . " " . __CLASS__ . "</strong>: Logger enabled.\n";
+            static::$log[] = "<strong>" . static::getTimestamp() . " " . __CLASS__ . "</strong>: Logger enabled.\n"; // Adds this to the log if there has been no prior entries.
         }
 
         static::$log[] = "<strong>" . static::getTimestamp() . " {$class}</strong>: {$message}\n";
