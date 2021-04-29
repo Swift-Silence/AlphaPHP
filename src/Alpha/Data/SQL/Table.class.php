@@ -115,7 +115,7 @@ class Table
 
         $this->checkModelAfter($results);
 
-        die(print_r($results, true));
+        return $results;
     }
 
     /**
