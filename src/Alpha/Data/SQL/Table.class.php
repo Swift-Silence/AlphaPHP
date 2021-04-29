@@ -108,6 +108,16 @@ class Table
         $this->Query->insert($this, $data);
     }
 
+    public function select($selectors, $where, $order_by = false, $limit = false)
+    {
+        $this->log("Selecting data from the database...", true);
+        $results = $this->Query->select($this, $selectors, $where, $order_by, $limit);
+
+        $this->checkModelAfter($results);
+
+        die(print_r($results, true));
+    }
+
     /**
      * Checks if the table exists in the database using the DB object
      * @return bool
@@ -135,6 +145,23 @@ class Table
             if (method_exists($this->Model, $method_name))
             {
                 $data[$col] = $this->Model->$method_name($val);
+            }
+        }
+    }
+
+    private function checkModelAfter(&$data)
+    {
+        foreach ($data as $i => $row)
+        {
+            foreach ($row as $col => $val)
+            {
+                $method_name = "{$this->name}_table_after_{$col}";
+                //die($method_name);
+
+                if (method_exists($this->Model, $method_name))
+                {
+                    $data[$i][$col] = $this->Model->$method_name($val);
+                }
             }
         }
     }

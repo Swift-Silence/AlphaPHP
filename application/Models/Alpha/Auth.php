@@ -2,6 +2,7 @@
 
 namespace Models\Alpha;
 
+use \Alpha\Data\SQL\Query;
 use \Alpha\Data\SQL\Table\Type;
 
 class Auth extends \Alpha\Data\Model
@@ -27,7 +28,7 @@ class Auth extends \Alpha\Data\Model
         $this->Sessions = $this->Table->create('sessions', $this, $this->config['tables']);
 
         $this->log("Selecting some data...");
-
+        $this->Users->select([Query::ATTR_SELECT_ALL], [], ['id' => 'ASC'], '2,1');
     }
 
     public function table_build_users($T)
@@ -46,6 +47,16 @@ class Auth extends \Alpha\Data\Model
     public function users_table_before_username($val)
     {
         return "LOL_$val";
+    }
+
+    public function users_table_after_id($val)
+    {
+        return "00" . $val;
+    }
+
+    public function users_table_after_username($val)
+    {
+        return "{$val}_LOL";
     }
 
 }

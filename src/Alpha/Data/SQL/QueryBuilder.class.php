@@ -14,6 +14,8 @@ use \Alpha\Debug\Logger;
 class QueryBuilder
 {
 
+    public $Stmt;
+
     /**
      * Holds last query object.
      * @var \Alpha\Data\SQL\Query|null
@@ -38,7 +40,35 @@ class QueryBuilder
         Logger::log($this, "Building new SQL <b>INSERT</b> query...");
 
         $this->Query = new Query(Query::ATTR_TYPE_INSERT, $Table->getSQLTableName(), $data);
-        $Table->DB->query($this->Query->getSQL(), $data);
+        return $Table->DB->query($this->Query->getSQL(), $data);
+    }
+
+    public function select($Table, $selectors, &$where, $order_by, $limit)
+    {
+        Logger::log($this, "Building new SQL <b>SELECT</b> query...");
+
+        $this->Query = new Query(Query::ATTR_TYPE_SELECT, $Table->getSQLTableName(), $selectors, $where, $order_by, $limit);
+
+        $this->fixWhere($where);
+        $this->Stmt = $Table->DB->query($this->Query->getSQL(), $where);
+        return $this->Stmt->fetchAll();
+    }
+
+    private function fixWhere(&$where)
+    {
+        $new = [];
+        foreach ($where as $col => $val)
+        {
+            $c1 = substr($col, 0, 1);
+            $v1 = substr($val, 0, 1);
+
+            if (!ctype_alpha($c1)) $col = substr($col, 1);
+            if (!ctype_alnum($v1)) $val = substr($val, 1);
+
+            $new[$col] = $val;
+        }
+
+        $where = $new;
     }
 
 }

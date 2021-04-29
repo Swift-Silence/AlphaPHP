@@ -108,6 +108,8 @@ class DB
         $this->log("Executing SQL query...", true);
         $this->stmt->execute($data);
         $this->log("Query executed.", true);
+
+        return $this->stmt;
     }
 
     /**
