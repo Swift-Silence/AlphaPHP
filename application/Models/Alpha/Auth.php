@@ -3,7 +3,7 @@
 namespace Models\Alpha;
 
 use \Alpha\Data\SQL\Query;
-use \Alpha\Data\SQL\Table\Type;
+use \Alpha\Data\SQL\Table;
 
 class Auth extends \Alpha\Data\Model
 {
@@ -34,15 +34,15 @@ class Auth extends \Alpha\Data\Model
 
     public function table_build_users($T)
     {
-        $T->col('id', Type::BIGINT, 21, false, true, true);
-        $T->col('username', Type::VARCHAR, 15);
+        $T->col('id', Table::COL_TYPE_BIGINT, 21, false, true, true);
+        $T->col('username', Table::COL_TYPE_VARCHAR, 15);
     }
 
     public function table_build_sessions($T)
     {
-        $T->col('id', Type::BIGINT, 21, false, true, true);
-        $T->col('user_id', Type::BIGINT, 21);
-        $T->col('token', Type::VARCHAR, 64);
+        $T->col('id', Table::COL_TYPE_BIGINT, 21, false, true, true);
+        $T->col('user_id', Table::COL_TYPE_BIGINT, 21);
+        $T->col('token', Table::COL_TYPE_VARCHAR, 64);
     }
 
     public function users_table_before_username($val)

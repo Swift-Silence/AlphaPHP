@@ -17,6 +17,14 @@ use \Alpha\Data\SQL\QueryBuilder;
 class Table
 {
 
+    const COL_TYPE_INT      = "INT";
+    const COL_TYPE_BIGINT   = "BIGINT";
+
+    const COL_TYPE_VARCHAR  = "VARCHAR";
+    const COL_TYPE_TEXT     = "TEXT";
+
+    const COL_TYPE_ENUM     = "ENUM";
+
     /**
      * Database object
      * @var \Alpha\Data\SQL\DB
