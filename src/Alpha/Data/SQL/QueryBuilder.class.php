@@ -11,7 +11,7 @@ use \Alpha\Debug\Logger;
  * Handles all query objects and forwards query SQL to the DB object.
  */
 
-class QueryBuilder
+class QueryBuilder implements \Alpha\Data\SQL\QueryInterface
 {
 
     public $Stmt;
@@ -39,7 +39,7 @@ class QueryBuilder
     {
         Logger::log($this, "Building new SQL <b>INSERT</b> query...");
 
-        $this->Query = new Query(Query::ATTR_TYPE_INSERT, $Table->getSQLTableName(), $data);
+        $this->Query = new Query(self::ATTR_TYPE_INSERT, $Table->getSQLTableName(), $data);
         return $this->Stmt = $Table->DB->query($this->Query->getSQL(), $data);
     }
 
@@ -57,7 +57,7 @@ class QueryBuilder
     {
         Logger::log($this, "Building new SQL <b>SELECT</b> query...");
 
-        $this->Query = new Query(Query::ATTR_TYPE_SELECT, $Table->getSQLTableName(), $selectors, $where, $order_by, $limit);
+        $this->Query = new Query(self::ATTR_TYPE_SELECT, $Table->getSQLTableName(), $selectors, $where, $order_by, $limit);
 
         $this->fixWhere($where);
         $this->Stmt = $Table->DB->query($this->Query->getSQL(), $where);
@@ -75,7 +75,7 @@ class QueryBuilder
     {
         Logger::log($this, "Building new SQL <b>UPDATE</b> query...");
 
-        $this->Query = new Query(Query::ATTR_TYPE_UPDATE, $Table->getSQLTableName(), $data, $where);
+        $this->Query = new Query(self::ATTR_TYPE_UPDATE, $Table->getSQLTableName(), $data, $where);
         //die($this->Query->getSQL());
         return $this->Stmt = $Table->DB->query($this->Query->getSQL(), $this->Query->placeholders);
     }
@@ -90,7 +90,7 @@ class QueryBuilder
     {
         Logger::log($this, "Building new SQL <b>DELETE</b> query...");
 
-        $this->Query = new Query(Query::ATTR_TYPE_DELETE, $Table->getSQLTableName(), [], $where);
+        $this->Query = new Query(self::ATTR_TYPE_DELETE, $Table->getSQLTableName(), [], $where);
         //die($this->Query->getSQL());
         return $this->Stmt = $Table->DB->query($this->Query->getSQL(), $this->Query->placeholders);
     }

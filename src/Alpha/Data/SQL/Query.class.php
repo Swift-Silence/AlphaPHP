@@ -12,17 +12,10 @@ use \Alpha\Exceptions\Data\SQL\Where\SyntaxException;
  * Represents a query in the code and can spit out SQL syntax based on query type.
  */
 
-class Query
+class Query implements \Alpha\Data\SQL\QueryInterface
 {
 
-    // Constants for testing query type
-    const ATTR_TYPE_INSERT = 100;
-    const ATTR_TYPE_SELECT = 101;
-    const ATTR_TYPE_UPDATE = 102;
-    const ATTR_TYPE_DELETE = 103;
 
-    // Special Select all constant
-    const ATTR_SELECT_ALL = 1000;
 
 
 
@@ -112,13 +105,13 @@ class Query
     {
         switch ($this->type)
         {
-            case Query::ATTR_TYPE_INSERT: // INSERT INTO queries
+            case self::ATTR_TYPE_INSERT: // INSERT INTO queries
                 return $this->SQL_insert();
-            case Query::ATTR_TYPE_SELECT: // SELECT queries
+            case self::ATTR_TYPE_SELECT: // SELECT queries
                 return $this->SQL_select();
-            case Query::ATTR_TYPE_UPDATE: // UPDATE queries
+            case self::ATTR_TYPE_UPDATE: // UPDATE queries
                 return $this->SQL_update();
-            case Query::ATTR_TYPE_DELETE:
+            case self::ATTR_TYPE_DELETE:
                 return $this->SQL_delete();
             default:
                 throw new \Alpha\Exceptions\Exception("Invalid query type passed to " . __CLASS__ . " object.");
@@ -161,7 +154,7 @@ class Query
         $all = false;
         foreach ($this->data as $col)
         {
-            if ($col == Query::ATTR_SELECT_ALL) {
+            if ($col == self::ATTR_SELECT_ALL) {
                 $SQL .= "* ";
                 $all = true;
                 continue;
