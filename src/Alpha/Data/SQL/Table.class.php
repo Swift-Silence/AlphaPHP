@@ -6,6 +6,7 @@ use \Alpha\Debug\Logger;
 use \Alpha\Data\SQL\DB;
 use \Alpha\Data\SQL\Exceptions\TableDesignException;
 use \Alpha\Data\SQL\Table\TableBuilder;
+use \Alpha\Data\SQL\Query;
 use \Alpha\Data\SQL\QueryBuilder;
 
 /**
@@ -108,14 +109,45 @@ class Table
         $this->Query->insert($this, $data);
     }
 
-    public function select($selectors, $where, $order_by = false, $limit = false)
+    /**
+     * Selects data from the table and returns array of objects representing table rows.
+     * @param  array            $selectors Array of selectors to use
+     * @param  array|false      $where     Where array or false.
+     * @param  array|false      $order_by  Order by array or false.
+     * @param  int|string|false $limit     int, string, or false.
+     * @return array rows
+     */
+    public function select($selectors, $where = false, $order_by = false, $limit = false)
     {
-        $this->log("Selecting data from the database...", true);
+        $this->log("Selecting data from the database... <b>[{{selectors}}]</b> [WHERE <b>{{where}}</b>]", true, [], $where, $selectors);
         $results = $this->Query->select($this, $selectors, $where, $order_by, $limit);
 
         $this->checkModelAfter($results);
 
         return $results;
+    }
+
+    /**
+     * Updates data in the table
+     * @param  array       $data  Data to be updated
+     * @param  array|false $where Where to update data
+     */
+    public function update($data, $where = false)
+    {
+        $this->checkModelBefore($data);
+
+        $this->log("Updating data in the database... <b>[{{data}}]</b> [WHERE <b>{{where}}</b>]", true, $data, $where);
+        $this->Query->update($this, $data, $where);
+    }
+
+    /**
+     * Deletes data from the table
+     * @param  array $where  Where to dete the data
+     */
+    public function delete($where)
+    {
+        $this->log("Deleting data from the database... [WHERE <b>{{where}}</b>]", true, [], $where);
+        $this->Query->delete($this, $where);
     }
 
     /**
@@ -149,6 +181,12 @@ class Table
         }
     }
 
+    /**
+     * Checks the model for methods pertaining to data alteration after retrieval
+     * from the MySQL table.
+     * @param  array  $data Data to be modified
+     * @return void        void
+     */
     private function checkModelAfter(&$data)
     {
         foreach ($data as $i => $row)
@@ -172,20 +210,44 @@ class Table
      * @param  boolean $db_alter Whether log came from a method that alters the database or not
      * @param  array   $data     Data to print to log if parameter 2 is true.
      */
-    private function log($message, $db_alter = false, $data = [])
+    private function log($message, $db_alter = false, $data = [], $where = [], $selectors = [])
     {
         $method = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'];
 
         if ($db_alter)
         {
             $s_data = "";
+            $s_where = "";
+            $s_selectors = "";
+
             foreach ($data as $col => $val)
             {
                 $s_data .= "'{$col}' => '{$val}', ";
             }
-            $s_data = substr(rtrim($s_data), 0, -1);
+            foreach ($where as $col => $val)
+            {
+                $s_where .= "{$col}<i>{$val}</i>";
+            }
+            foreach ($selectors as $sel)
+            {
+                if ($sel == Query::ATTR_SELECT_ALL)
+                {
+                    $s_selectors = "*";
+                    continue;
+                }
+                else
+                {
+                    $s_selectors .= "`{$sel}`, ";
+                }
+            }
 
-            Logger::log($this, "<b>[{$this->name}]</b> " . str_replace("{{data}}", $s_data, $message)); // <i>[" . __CLASS__ . "::{$method}]</i>
+            $s_data = substr(rtrim($s_data), 0, -1);
+            if ($s_selectors != "*") $s_selectors = substr(rtrim($s_selectors), 0, -1); // Trim last comma if * not used
+
+            $find = ['{{data}}', '{{where}}', '{{selectors}}'];
+            $replace = [$s_data, $s_where, $s_selectors];
+
+            Logger::log($this, "<b>[{$this->name}]</b> " . str_replace($find, $replace, $message)); // <i>[" . __CLASS__ . "::{$method}]</i>
         }
         else
         {

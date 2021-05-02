@@ -40,8 +40,10 @@ $req_route = str_replace(
     '',
     REQUEST_URI
 );
-$req_route = substr($req_route, 0, strpos($req_route, '?'));
+$getpos = strpos($req_route, '?');
+$req_route = ($getpos) ? substr($req_route, 0, $getpos) : $req_route;
 define('REQUEST_ROUTE', $req_route);
+//die(REQUEST_ROUTE);
 
 // Establish HTTP_HOST for easy access. Falls back to SERVER_NAME if HTTP_HOST index is not set.
 $http_host = (isset($_SERVER['HTTP_HOST']) && !empty($_SERVER['HTTP_HOST'])) ? $_SERVER['HTTP_HOST'] : $_SERVER['SERVER_NAME'];

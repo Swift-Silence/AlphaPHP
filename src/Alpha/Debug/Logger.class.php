@@ -39,7 +39,9 @@ class Logger {
         'Alpha\\Data\\SQL\\DB',
         'Alpha\\Data\\SQL\\TableManager',
         'Alpha\\Data\\SQL\\Table',
-        'Alpha\\Data\\SQL\\Table\\TableBuilder'
+        'Alpha\\Data\\SQL\\Table\\TableBuilder',
+        'Alpha\\Data\\SQL\\QueryBuilder',
+        'Alpha\\Data\\SQL\\Query'
     ];
 
     /**

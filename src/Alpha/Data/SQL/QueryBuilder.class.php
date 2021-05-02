@@ -40,9 +40,19 @@ class QueryBuilder
         Logger::log($this, "Building new SQL <b>INSERT</b> query...");
 
         $this->Query = new Query(Query::ATTR_TYPE_INSERT, $Table->getSQLTableName(), $data);
-        return $Table->DB->query($this->Query->getSQL(), $data);
+        return $this->Stmt = $Table->DB->query($this->Query->getSQL(), $data);
     }
 
+    /**
+     * Provides easy plug to build a select query.
+     *
+     * @param  \Alpha\Data\SQL\Table $Table     The table object.
+     * @param  array                 $selectors Array of column to retrieve
+     * @param  array                 $where     Where conditional array
+     * @param  array|false           $order_by  array of 'col' => '<ASC/DESC>' or false
+     * @param  mixed                 $limit     Integer or string represting SQL limit clause
+     * @return array Data fetched from the database.
+     */
     public function select($Table, $selectors, &$where, $order_by, $limit)
     {
         Logger::log($this, "Building new SQL <b>SELECT</b> query...");
@@ -54,6 +64,43 @@ class QueryBuilder
         return $this->Stmt->fetchAll();
     }
 
+    /**
+     * Provides easy plug to build an update query.
+     * @param  \Alpha\Data\SQL\Table $Table The table object.
+     * @param  array  $data  Data to be updated
+     * @param  array  $where Where to update the data.
+     * @return \PDOStatement result of the query
+     */
+    public function update($Table, $data, $where)
+    {
+        Logger::log($this, "Building new SQL <b>UPDATE</b> query...");
+
+        $this->Query = new Query(Query::ATTR_TYPE_UPDATE, $Table->getSQLTableName(), $data, $where);
+        //die($this->Query->getSQL());
+        return $this->Stmt = $Table->DB->query($this->Query->getSQL(), $this->Query->placeholders);
+    }
+
+    /**
+     * Provides easy plug to build a DELETE query.
+     * @param  \Alpha\Data\SQL\Table $Table The table object
+     * @param  array $where Where to delete the data
+     * @return \PDOStatement result of the query
+     */
+    public function delete($Table, $where)
+    {
+        Logger::log($this, "Building new SQL <b>DELETE</b> query...");
+
+        $this->Query = new Query(Query::ATTR_TYPE_DELETE, $Table->getSQLTableName(), [], $where);
+        //die($this->Query->getSQL());
+        return $this->Stmt = $Table->DB->query($this->Query->getSQL(), $this->Query->placeholders);
+    }
+
+    /**
+     * Fixes the where clause for cases of data. This make be deprecated in the future
+     * due to the implementation of the public property $placeholders in the query
+     * object.
+     * @param  array $where Reference to the where data.
+     */
     private function fixWhere(&$where)
     {
         $new = [];

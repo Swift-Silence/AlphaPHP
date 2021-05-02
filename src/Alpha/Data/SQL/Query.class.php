@@ -16,11 +16,22 @@ class Query
 {
 
     // Constants for testing query type
-    const ATTR_TYPE_INSERT = 1;
-    const ATTR_TYPE_SELECT = 2;
+    const ATTR_TYPE_INSERT = 100;
+    const ATTR_TYPE_SELECT = 101;
+    const ATTR_TYPE_UPDATE = 102;
+    const ATTR_TYPE_DELETE = 103;
 
     // Special Select all constant
-    const ATTR_SELECT_ALL = 3;
+    const ATTR_SELECT_ALL = 1000;
+
+
+
+
+    /**
+     * Holds all data and where data in PDO placeholder format
+     * @var array
+     */
+    public $placeholders = [];
 
     /**
      * Numerical representation of the query type
@@ -46,11 +57,30 @@ class Query
      */
     private $where;
 
+    /**
+     * Array of acceptable symbols for indicating AND operations in SQL WHERE
+     * clauses
+     * @var array
+     */
     private $where_and_symbols = ['+', '&'];
+
+    /**
+     * Array of acceptable symbols for indicating OR operations in SQL WHERE
+     * clauses
+     * @var array
+     */
     private $where_or_symbols = ['/', '|'];
 
+    /**
+     * Order by data.
+     * @var array|false|null
+     */
     private $order_by;
 
+    /**
+     * Limit data
+     * @var int|string|null
+     */
     private $limit;
 
     /**
@@ -86,6 +116,10 @@ class Query
                 return $this->SQL_insert();
             case Query::ATTR_TYPE_SELECT: // SELECT queries
                 return $this->SQL_select();
+            case Query::ATTR_TYPE_UPDATE: // UPDATE queries
+                return $this->SQL_update();
+            case Query::ATTR_TYPE_DELETE:
+                return $this->SQL_delete();
             default:
                 throw new \Alpha\Exceptions\Exception("Invalid query type passed to " . __CLASS__ . " object.");
         }
@@ -117,6 +151,9 @@ class Query
         return $SQL;
     }
 
+    /**
+     * Returns SQL query for SELECT statement.
+     */
     private function SQL_select()
     {
         $SQL = "SELECT ";
@@ -124,7 +161,7 @@ class Query
         $all = false;
         foreach ($this->data as $col)
         {
-            if ($col = Query::ATTR_SELECT_ALL) {
+            if ($col == Query::ATTR_SELECT_ALL) {
                 $SQL .= "* ";
                 $all = true;
                 continue;
@@ -141,6 +178,29 @@ class Query
         if ($this->limit) $SQL .= $this->parseLimit();
 
         //die($SQL);
+        return trim($SQL);
+    }
+
+    /**
+     * Returns SQL query for UPDATE statement
+     */
+    private function SQL_update()
+    {
+        $SQL = "UPDATE `{$this->table_name}` SET ";
+
+        $SQL .= $this->parseUpdateData() . $this->parseWhere();
+
+        //print_r($this);
+        return trim($SQL);
+    }
+
+    /**
+     * Returns SQL query for DELETE statement.
+     */
+    private function SQL_delete()
+    {
+        $SQL = "DELETE FROM `{$this->table_name}` " . $this->parseWhere();
+
         return trim($SQL);
     }
 
@@ -163,11 +223,52 @@ class Query
         return $data;
     }
 
+    /**
+     * Parses update data and sends it back as a string. Differs from parseInsertData
+     * as that function is intended to separate column names and values and returns
+     * an array rather than a string.
+     * @return string Formatted SQL UPDATE definitions.
+     */
+    private function parseUpdateData()
+    {
+        $SQL = "";
+
+        foreach ($this->data as $col => $val)
+        {
+            $col_ph = $this->addPlaceholder($col, $val)->col;
+
+            $SQL .= "`{$col}`=:{$col_ph}, ";
+        }
+        $SQL = substr(rtrim($SQL), 0, -1).  " ";
+
+        return $SQL;
+    }
+
+    /**
+     * Adds a placeholder to the placeholders property and also fixes the issue
+     * of duplicates in the case where you need to update the same column you
+     * use to isolate a set of rows.
+     * @param string $col Column name.
+     * @param mixed  $val Value of $col
+     * @return \stdClass Object representing the column name and original value.
+     */
+    private function addPlaceholder($col, $val)
+    {
+        if (isset($this->placeholders[$col])) $col = $col . (string)mt_rand();
+        //echo "$col\t";
+        $this->placeholders[$col] = $val;
+        return (object) ['col' => $col, 'val' => $val];
+    }
+
+    /**
+     * Parses the SQL where clause and uses the built-in addPlaceholder function
+     * to build up the placeholder data.
+     * @return string Formatted SQL
+     */
     private function parseWhere()
     {
+        if (!$this->where || empty($this->where)) return "";
         $where_data = $this->where;
-
-        if (empty($where_data)) return ""; // Return empty string if no data provided.
 
         $SQL = "WHERE ";
 
@@ -183,6 +284,10 @@ class Query
         return trim($SQL);
     }
 
+    /**
+     * Parses the SQL ORDER BY clause.
+     * @return string Formatted SQL
+     */
     private function parseOrderBy()
     {
         if (!$this->order_by) return ""; // Return empty string if not set to true
@@ -196,6 +301,10 @@ class Query
         return $s;
     }
 
+    /**
+     * Parses the SQL LIMIT clause
+     * @return string Formatted SQL
+     */
     private function parseLimit()
     {
         if (!$this->limit) return "";
@@ -203,6 +312,22 @@ class Query
         return "LIMIT " . $this->limit . " ";
     }
 
+    /**
+     * Parses the where condition based on what was passed in the where array.
+     *
+     * Arrays for the SQL where clause have a very specific design:
+     * array(
+     *      '<column_name>' => '[<|>|=]<value>',
+     *      '[+|/]<column_name>' => '[<|>|=]<value>'
+     * );
+     *
+     * Only the first index title does not require a leading &\+ or /\|.
+     *
+     * @param  string  $col   Column name
+     * @param  mixed   $val   Value of the column
+     * @param  boolean $first If this is the first element in the where array
+     * @return string Formatted SQL
+     */
     private function parseWhereCondition($col, $val, $first = false)
     {
         $s = "";
@@ -232,7 +357,8 @@ class Query
         if (!$first)
             $col = substr($col, 1); // Remove leading symbol
 
-        $val = ":" . $col; // PDO Placeholder format
+        $val = ctype_alnum(substr($val, 0, 1)) ? $val : substr($val, 1);
+        $val = ":" . $this->addPlaceholder($col, $val)->col; // PDO Placeholder format
 
         $s .= "`{$col}`{$op}{$val}";
 

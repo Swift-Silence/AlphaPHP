@@ -28,7 +28,7 @@ Router::add(
     new Route('/home',       ['Alpha.Main' => 'Index']),
     new Route('/home/index', ['Alpha.Main' => 'Index'])
 );
-
+ 
 # 1-Page Error Controller Routes
 Router::add(
     new Route($Config->get('404_PATH'), ['Errors' => 'PageNotFound']) # Must be defined, or app will break if a route is not located

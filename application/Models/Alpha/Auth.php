@@ -27,8 +27,9 @@ class Auth extends \Alpha\Data\Model
         $this->log("Setting table 'sessions'...");
         $this->Sessions = $this->Table->create('sessions', $this, $this->config['tables']);
 
-        $this->log("Selecting some data...");
-        $this->Users->select([Query::ATTR_SELECT_ALL], [], ['id' => 'ASC'], '2,1');
+        $this->log("Changing some data...");
+        //$this->Users->select(['id', 'username'], ['username' => '=_TAustin', '/id' => '=2']);
+        $this->Users->delete(['id' => '=3']);
     }
 
     public function table_build_users($T)
