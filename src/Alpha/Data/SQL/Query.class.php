@@ -12,17 +12,10 @@ use \Alpha\Exceptions\Data\SQL\Where\SyntaxException;
  * Represents a query in the code and can spit out SQL syntax based on query type.
  */
 
-class Query
+class Query implements \Alpha\Data\SQL\QueryInterface
 {
 
-    // Constants for testing query type
-    const ATTR_TYPE_INSERT = 100;
-    const ATTR_TYPE_SELECT = 101;
-    const ATTR_TYPE_UPDATE = 102;
-    const ATTR_TYPE_DELETE = 103;
 
-    // Special Select all constant
-    const ATTR_SELECT_ALL = 1000;
 
 
 
@@ -92,7 +85,7 @@ class Query
      * @param array|false   $order_by   SQL ORDER BY array (ie. ['username' => 'asc'])
      * @param mixed         $limit      SQL LIMIT string or number
      */
-    public function __construct($type, $table_name, $data = false, $where = false, $order_by = false, $limit = false)
+    public function __construct(int $type, string $table_name, $data = false, $where = false, $order_by = false, $limit = false)
     {
         $this->type = $type;
         $this->table_name = $table_name;
@@ -110,15 +103,17 @@ class Query
      */
     public function getSQL()
     {
+        $this->placeholders = [];
+
         switch ($this->type)
         {
-            case Query::ATTR_TYPE_INSERT: // INSERT INTO queries
+            case self::ATTR_TYPE_INSERT: // INSERT INTO queries
                 return $this->SQL_insert();
-            case Query::ATTR_TYPE_SELECT: // SELECT queries
+            case self::ATTR_TYPE_SELECT: // SELECT queries
                 return $this->SQL_select();
-            case Query::ATTR_TYPE_UPDATE: // UPDATE queries
+            case self::ATTR_TYPE_UPDATE: // UPDATE queries
                 return $this->SQL_update();
-            case Query::ATTR_TYPE_DELETE:
+            case self::ATTR_TYPE_DELETE:
                 return $this->SQL_delete();
             default:
                 throw new \Alpha\Exceptions\Exception("Invalid query type passed to " . __CLASS__ . " object.");
@@ -161,7 +156,7 @@ class Query
         $all = false;
         foreach ($this->data as $col)
         {
-            if ($col == Query::ATTR_SELECT_ALL) {
+            if ($col == self::ATTR_SELECT_ALL) {
                 $SQL .= "* ";
                 $all = true;
                 continue;
@@ -175,7 +170,7 @@ class Query
         $SQL .= " FROM `{$this->table_name}` " . $this->parseWhere();
 
         if ($this->order_by) $SQL .= $this->parseOrderBy();
-        if ($this->limit) $SQL .= $this->parseLimit();
+        if ($this->limit) $SQL .= " " . $this->parseLimit();
 
         //die($SQL);
         return trim($SQL);
@@ -252,7 +247,7 @@ class Query
      * @param mixed  $val Value of $col
      * @return \stdClass Object representing the column name and original value.
      */
-    private function addPlaceholder($col, $val)
+    private function addPlaceholder(string $col, $val)
     {
         if (isset($this->placeholders[$col])) $col = $col . (string)mt_rand();
         //echo "$col\t";
@@ -328,7 +323,7 @@ class Query
      * @param  boolean $first If this is the first element in the where array
      * @return string Formatted SQL
      */
-    private function parseWhereCondition($col, $val, $first = false)
+    private function parseWhereCondition(string $col, $val, bool $first = false)
     {
         $s = "";
 
@@ -360,7 +355,7 @@ class Query
         $val = ctype_alnum(substr($val, 0, 1)) ? $val : substr($val, 1);
         $val = ":" . $this->addPlaceholder($col, $val)->col; // PDO Placeholder format
 
-        $s .= "`{$col}`{$op}{$val}";
+        $s .= "{$col}{$op}{$val}";
 
         return $s;
     }
@@ -369,7 +364,7 @@ class Query
      * Private logging function for quick access and table name association.
      * @param  string $message Message to send to the logger.
      */
-    private function log($message)
+    private function log(string $message)
     {
         Logger::log($this, "<b>[{$this->table_name}]</b> $message");
     }

@@ -17,8 +17,10 @@ class ModelManager
     /**
      * Mainly for logging that the model manager instantiated properly.
      */
-    public function __construct()
+    public function __construct(\Alpha\Networking\Request $R)
     {
+        $this->Request = $R;
+
         Logger::log($this, "Model Manager object instantiated.");
     }
 
@@ -28,7 +30,7 @@ class ModelManager
      * @param  mixed  $params     Parameters to pass to said model.
      * @return \Alpha\Data\Model  Model object.
      */
-    public function get($model_name, ...$params)
+    public function get(string $model_name, ...$params)
     {
         $model_name = str_replace('.', '\\', $model_name);
 
@@ -42,7 +44,9 @@ class ModelManager
         Logger::log($this, "Retrieving model <b>[{$model_name}] <i>[Params: {$s_params}]</i></b>...");
 
         $ns_name = "Models\\{$model_name}";
-        return new $ns_name($params);
+        $o = new $ns_name($params);
+
+        $o->setRequestHandler($this->Request);
     }
 
 }

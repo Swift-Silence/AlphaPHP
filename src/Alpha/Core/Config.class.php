@@ -57,7 +57,7 @@ class Config {
      * @param  mixed              $value Value to give the setting.
      * @return \Alpha\Core\Config Config object.
      */
-    public function set($name, $value) {
+    public function set(string $name, $value) {
         Logger::log($this, "Config option \"<strong>{$name}</strong>\" set to \"<strong>{$value}</strong>\".");
         $this->config[$name] = $value;
         return $this;
@@ -68,7 +68,7 @@ class Config {
      * @param  string $name Name of the setting.
      * @return mixed        Value of the setting.
      */
-    public function get($name) {
+    public function get(string $name) {
         if (isset($this->config[$name])) {
             return $this->config[$name];
         } else {

@@ -66,6 +66,8 @@ $app = new App();
 // Debug logger code - Only runs when logging is enabled and only dumps if configuration
 // is set for it.
 \Alpha\Debug\Logger::log(__FILE__, "Application execution finished. Printing log...");
+\Alpha\Debug\Logger::log(__FILE__, "Executed " . \Alpha\Data\SQL\DB::$executed_queries . " SQL queries.");
+
 if (\Alpha\Core\Config::singleton()->get('PRINT_LOG_AFTER_EACH_RUN'))
     \Alpha\Debug\Logger::dump();
 

@@ -54,10 +54,8 @@ class Controller
 
         Logger::log(__CLASS__, "Loading in dependencies...");
         $this->Request = new Request();
-        $this->Cookie  = new CookieHandler();
-        $this->Session = new SessionHandler();
 
-        $this->Model = new ModelManager();
+        $this->Model = new ModelManager($this->Request);
 
         Logger::log(__CLASS__, "Dependencies loaded! Executing application...");
         Logger::_(__CLASS__, 3);
@@ -65,9 +63,9 @@ class Controller
 
     /**
      * Provides easy access to log controller-level messages.
-     * @param  string $message Message to log to the logging system.    
+     * @param  string $message Message to log to the logging system.
      */
-    protected function log($message)
+    protected function log(string $message)
     {
         $method = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'];
         Logger::log($this, "<b>[{$method}]</b> {$message}");
