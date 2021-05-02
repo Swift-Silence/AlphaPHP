@@ -11,5 +11,5 @@ interface QueryInterface
     const ATTR_TYPE_DELETE = 103;
 
     // Special Select all constant
-    const ATTR_SELECT_ALL = 1000;
+    const ATTR_SELECT_ALL = "*";
 }

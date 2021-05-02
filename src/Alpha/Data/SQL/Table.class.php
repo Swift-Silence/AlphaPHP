@@ -3,6 +3,7 @@
 namespace Alpha\Data\SQL;
 
 use \Alpha\Debug\Logger;
+use \Alpha\Data\Paginator;
 use \Alpha\Data\SQL\DB;
 use \Alpha\Data\SQL\Exceptions\TableDesignException;
 use \Alpha\Data\SQL\Table\TableBuilder;
@@ -32,17 +33,26 @@ class Table
     public $DB;
 
     /**
+     * Paginator object for large dara retrievals
+     * @var \Alpha\Data\Paginator
+     */
+    public $Paginator;
+
+    /**
      * Table name
      * @var string
      */
-    private $name;
+    public $name;
 
     /**
      * Options
      * @var array
      */
     private $options = [
-        'table_prefix' => ''
+        'table_prefix' => '',
+        'paginator' => [
+            'rows_per_page' => 10
+        ]
     ];
 
     /**
@@ -69,7 +79,8 @@ class Table
         // Acquire dependencies
         $this->Model = $Model;
         $this->DB    = DB::singleton();
-        $this->Query = new QueryBuilder();
+        $this->Query = new QueryBuilder($this);
+        $this->Paginator = new Paginator($this, $this->options['paginator']);
 
         $this->log("Table object instantiated.");
 
@@ -114,7 +125,7 @@ class Table
         $this->checkModelBefore($data);
 
         $this->log("Inserting data into database: <b>[{{data}}]</b>", true, $data);
-        $this->Query->insert($this, $data);
+        $this->Query->insert($data);
     }
 
     /**
@@ -127,12 +138,43 @@ class Table
      */
     public function select($selectors, $where = false, $order_by = false, $limit = false)
     {
-        $this->log("Selecting data from the database... <b>[{{selectors}}]</b> [WHERE <b>{{where}}</b>]", true, [], $where, $selectors);
-        $results = $this->Query->select($this, $selectors, $where, $order_by, $limit);
+        $this->log("Selecting data from the database... <b>[{{selectors}}]</b> [WHERE <b>{{where}}</b>] [LIMIT: <b>{$limit}</b>]", true, [], $where, $selectors);
+        $results = $this->Query->select($selectors, $where, $order_by, $limit)->fetchAll();
 
         $this->checkModelAfter($results);
 
+        foreach ($results as $i => $row)
+        {
+            $results[$i] = (object)$row;
+        }
+
         return $results;
+    }
+
+    public function selectPage(int $page_number, $where = [], $order_by = false)
+    {
+        $this->log("Selecting page <b>{$page_number}</b> of table data...");
+
+        if ($order_by)      $this->Paginator->setOrderBy($order_by);
+        if (!empty($where)) $this->Paginator->setWhere($where);
+        return $this->Paginator->getPage($page_number);
+    }
+
+    /**
+     * Gets a single row from the database
+     * @param  array  $where Where array
+     * @return object Row data
+     */
+    public function row($where)
+    {
+        $selectors = [Query::ATTR_SELECT_ALL];
+        $order_by = false;
+        $limit = 1;
+
+        $this->log("Selecting data from the database... <b>[{{selectors}}]</b> [WHERE <b>{{where}}</b>]", true, [], $where, $selectors);
+        $result = $this->Query->select($selectors, $where, $order_by, $limit)->fetch();
+
+        return (object)$result;
     }
 
     /**
@@ -145,7 +187,7 @@ class Table
         $this->checkModelBefore($data);
 
         $this->log("Updating data in the database... <b>[{{data}}]</b> [WHERE <b>{{where}}</b>]", true, $data, $where);
-        $this->Query->update($this, $data, $where);
+        $this->Query->update($data, $where);
     }
 
     /**
@@ -155,7 +197,21 @@ class Table
     public function delete($where)
     {
         $this->log("Deleting data from the database... [WHERE <b>{{where}}</b>]", true, [], $where);
-        $this->Query->delete($this, $where);
+        $this->Query->delete($where);
+    }
+
+    public function countRows($where)
+    {
+        $SQL = "";
+
+        if (!empty($where))
+        {
+            $Q = new Query(Query::ATTR_TYPE_SELECT, $this->getSQLTableName(), [Query::ATTR_SELECT_ALL], $where);
+            $SQL = substr($Q->getSQL(), strpos($Q->getSQL(), "WHERE"));
+            return $this->DB->countRows($this->getSQLTableName(), $SQL, $Q->placeholders);
+        }
+
+        return $this->DB->countRows($this->getSQLTableName(), $SQL, []);
     }
 
     /**

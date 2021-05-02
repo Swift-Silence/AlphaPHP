@@ -23,13 +23,16 @@ class Auth extends \Alpha\Data\Model
 
         $this->log("Setting table 'users'...");
         $this->Users = $this->Table->create('users', $this, $this->config['tables']);
+        $this->Users->Paginator->setRowsPerPage(20);
+        $this->Users->Paginator->setWhere(['id' => '>300']);
 
         $this->log("Setting table 'sessions'...");
         $this->Sessions = $this->Table->create('sessions', $this, $this->config['tables']);
 
-        $this->log("Changing some data...");
-        //$this->Users->select(['id', 'username'], ['username' => '=_TAustin', '/id' => '=2']);
-        $this->Users->delete(['id' => '=3']);
+        //$r = $this->Users->select([Query::ATTR_SELECT_ALL], []);
+        $r = $this->Users->selectPage(1);
+        //print_r($r);
+        echo "\n\n\nTOTAL PAGE COUNT:\t" . $this->Users->Paginator->getPageCount();
     }
 
     public function table_build_users($T)
@@ -43,21 +46,6 @@ class Auth extends \Alpha\Data\Model
         $T->col('id', Table::COL_TYPE_BIGINT, 21, false, true, true);
         $T->col('user_id', Table::COL_TYPE_BIGINT, 21);
         $T->col('token', Table::COL_TYPE_VARCHAR, 64);
-    }
-
-    public function users_table_before_username($val)
-    {
-        return "LOL_$val";
-    }
-
-    public function users_table_after_id($val)
-    {
-        return "00" . $val;
-    }
-
-    public function users_table_after_username($val)
-    {
-        return "{$val}_LOL";
     }
 
 }

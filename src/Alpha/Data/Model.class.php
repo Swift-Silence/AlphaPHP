@@ -27,6 +27,8 @@ class Model
      */
     protected $Table;
 
+    protected $Request;
+
     /**
      * Must run before any child model constructor code runs.
      */
@@ -42,9 +44,14 @@ class Model
      * Protected log function for ease of access by models.
      * @param  string $message Message to send to the logger.
      */
-    public function log($message)
+    public function log(string $message)
     {
         Logger::log($this, "$message");
+    }
+
+    public function setRequestHandler(\Alpha\Networking\Request $Request)
+    {
+        $this->Request = $Request;
     }
 
 }

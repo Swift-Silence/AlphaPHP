@@ -69,6 +69,8 @@ class DB
      */
     private $stmt;
 
+    public static $executed_queries = 0;
+
     /**
      * Private constructor for singleton pattern. Attempts connection to the
      * database and logs the error if present.
@@ -99,7 +101,7 @@ class DB
      * @param  array  $data  Data to use for the prepared style variables
      * @return \PDOStatement Result of the query
      */
-    public function query($sql, array $data = [])
+    public function query(string $sql, array $data = [])
     {
         $this->log("Preparing SQL query <b>[$sql] <i>[Data: {{data}}]</i></b>...", true, $data);
 
@@ -109,6 +111,7 @@ class DB
         $this->stmt->execute($data);
         $this->log("Query executed.", true);
 
+        static::$executed_queries++;
         return $this->stmt;
     }
 
@@ -117,7 +120,7 @@ class DB
      * @param  string  $table_name Name of the table to be looked for.
      * @return boolean
      */
-    public function hasTable($table_name)
+    public function hasTable(string $table_name)
     {
         $sql = "SELECT 1 FROM `{$table_name}` LIMIT 1";
 
@@ -126,12 +129,28 @@ class DB
     }
 
     /**
+     * Returns the total number of rows in a table
+     * @param  string  $table_name Name of the table
+     * @param  string  $where      Where clause in pure SQL syntax format
+     * @return int                 Number of table rows.
+     */
+    public function countRows(string $table_name, string $where, array $placeholders)
+    {
+        $sql = "SELECT COUNT(*) FROM `{$table_name}` {$where}";
+        //print_r($sql);
+        //print_r($placeholders);
+        $this->query($sql, $placeholders);
+
+        return $this->stmt->fetch()['COUNT(*)'];
+    }
+
+    /**
      * Method for creating a table in the database. Takes cols as an array of objects.
      * @param  string $table_name SQL Table name
      * @param  array  $cols       Array of column object
      * @return \PDOStatement
      */
-    public function createTable($table_name, $cols)
+    public function createTable(string $table_name, array $cols)
     {
         $sql = "CREATE TABLE `$table_name` (";
         foreach ($cols as $col)
@@ -176,7 +195,7 @@ class DB
      * Log method for logging messages to the debug logger
      * @param  string $message Message to log
      */
-    private function log($message, $query = false, $data = [])
+    private function log(string $message, bool $query = false, array $data = [])
     {
         if ($query)
         {

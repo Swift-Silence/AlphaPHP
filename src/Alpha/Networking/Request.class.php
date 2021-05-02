@@ -2,16 +2,22 @@
 
 namespace Alpha\Networking;
 
+use \Alpha\Debug\Logger;
+use \Alpha\Networking\Request\CookieHandler;
+use \Alpha\Networking\Request\SessionHandler;
+
 /**
  * Request class
  *
  * Provides an easy way to access GET and POST requests.
  */
 
-use \Alpha\Debug\Logger;
-
 class Request
 {
+
+    public $Session;
+
+    public $Cookie;
 
     /**
      * Holds all POST data.
@@ -33,6 +39,8 @@ class Request
         Logger::log($this, "Request object instantiated.");
 
         $this->getRequests();
+        $this->Session = new SessionHandler();
+        $this->Cookie  = new CookieHandler();
     }
 
     /**

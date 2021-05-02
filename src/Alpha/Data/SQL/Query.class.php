@@ -85,7 +85,7 @@ class Query implements \Alpha\Data\SQL\QueryInterface
      * @param array|false   $order_by   SQL ORDER BY array (ie. ['username' => 'asc'])
      * @param mixed         $limit      SQL LIMIT string or number
      */
-    public function __construct($type, $table_name, $data = false, $where = false, $order_by = false, $limit = false)
+    public function __construct(int $type, string $table_name, $data = false, $where = false, $order_by = false, $limit = false)
     {
         $this->type = $type;
         $this->table_name = $table_name;
@@ -103,6 +103,8 @@ class Query implements \Alpha\Data\SQL\QueryInterface
      */
     public function getSQL()
     {
+        $this->placeholders = [];
+
         switch ($this->type)
         {
             case self::ATTR_TYPE_INSERT: // INSERT INTO queries
@@ -168,7 +170,7 @@ class Query implements \Alpha\Data\SQL\QueryInterface
         $SQL .= " FROM `{$this->table_name}` " . $this->parseWhere();
 
         if ($this->order_by) $SQL .= $this->parseOrderBy();
-        if ($this->limit) $SQL .= $this->parseLimit();
+        if ($this->limit) $SQL .= " " . $this->parseLimit();
 
         //die($SQL);
         return trim($SQL);
@@ -245,7 +247,7 @@ class Query implements \Alpha\Data\SQL\QueryInterface
      * @param mixed  $val Value of $col
      * @return \stdClass Object representing the column name and original value.
      */
-    private function addPlaceholder($col, $val)
+    private function addPlaceholder(string $col, $val)
     {
         if (isset($this->placeholders[$col])) $col = $col . (string)mt_rand();
         //echo "$col\t";
@@ -321,7 +323,7 @@ class Query implements \Alpha\Data\SQL\QueryInterface
      * @param  boolean $first If this is the first element in the where array
      * @return string Formatted SQL
      */
-    private function parseWhereCondition($col, $val, $first = false)
+    private function parseWhereCondition(string $col, $val, bool $first = false)
     {
         $s = "";
 
@@ -353,7 +355,7 @@ class Query implements \Alpha\Data\SQL\QueryInterface
         $val = ctype_alnum(substr($val, 0, 1)) ? $val : substr($val, 1);
         $val = ":" . $this->addPlaceholder($col, $val)->col; // PDO Placeholder format
 
-        $s .= "`{$col}`{$op}{$val}";
+        $s .= "{$col}{$op}{$val}";
 
         return $s;
     }
@@ -362,7 +364,7 @@ class Query implements \Alpha\Data\SQL\QueryInterface
      * Private logging function for quick access and table name association.
      * @param  string $message Message to send to the logger.
      */
-    private function log($message)
+    private function log(string $message)
     {
         Logger::log($this, "<b>[{$this->table_name}]</b> $message");
     }

@@ -60,7 +60,7 @@ class TableBuilder
      * @param  boolean $primary Whether column is primary key or not
      * @param  boolean $AI      If column should auto increment
      */
-    public function col($name, $type, $values = null, $null = false, $primary = false, $AI = false)
+    public function col(string $name, string $type, $values = null, $null = false, $primary = false, $AI = false)
     {
         $this->log("Column <b>`$name` | </b>Type: <b>$type | </b>Length/Values: <b>$values | </b>Null: <b>$null | </b>Primary: <b>$primary | </b>Auto Increment: <b>$AI</b>");
         $this->cols[] = (object) [
@@ -97,7 +97,7 @@ class TableBuilder
      * Private log function for quick use.
      * @param  string $message Message to send to the logger.
      */
-    private function log($message)
+    private function log(string $message)
     {
         Logger::log($this, "<b>[{$this->name}]</b> $message");
     }
