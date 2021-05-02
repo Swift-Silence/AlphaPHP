@@ -14,7 +14,8 @@ class Main extends \Alpha\Core\Controller
 
     public function Index($params = [])
     {
-
+        $this->Model->get('Alpha.Auth');
+        $this->log('test');
     }
 
 }

@@ -42,7 +42,14 @@ $Config = \Alpha\Core\Config::singleton();
 
 // Debug options
 $Config->set('LOGGING', true); # D
+$Config->set('SHOW_FRAMEWORK_LOGS', true); # D
 $Config->set('PRINT_LOG_AFTER_EACH_RUN', true); # D
+
+// Database settings
+$Config->set('DB_HOST',     '127.0.0.1');
+$Config->set('DB_USER',     'root');
+$Config->set('DB_PASSWORD', 'tylerboo22');
+$Config->set('DB_DB',       'alphaphp');
 
 // Error Handling
 $Config->set('404_PATH', '/404');
@@ -53,6 +60,7 @@ $Config->set('404_PATH', '/404');
 
 \Alpha\Debug\Logger::log(__FILE__, "Initial config and autoloaders loaded.");
 
+// Require the routes.inc.php file, but catch any framework exceptions and dump the log.
 try
 {
     require (CONFIG . DS . 'routes.inc.php');

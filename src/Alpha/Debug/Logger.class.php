@@ -20,6 +20,31 @@ class Logger {
     private static $log = [];
 
     /**
+     * List of framework classes to exclude if Config setting SHOW_FRAMEWORK_LOGS is set to false.
+     * @var array
+     */
+    private static $framework_classes = [
+        'Alpha\\Debug\\Logger',
+        'Alpha\\Core\\Config',
+        'Alpha\\Router\\Route',
+        'config.inc.php',
+        'routes.inc.php',
+        'Alpha\\Core\\App',
+        'Alpha\\Router\\Router',
+        //'Alpha\\Core\\Controller',
+        'Alpha\\Networking\\Request',
+        'Alpha\\Networking\\Request\\CookieHandler',
+        'Alpha\\Networking\\Request\\SessionHandler',
+        'Alpha\\Core\\ModelManager',
+        'Alpha\\Data\\SQL\\DB',
+        'Alpha\\Data\\SQL\\TableManager',
+        'Alpha\\Data\\SQL\\Table',
+        'Alpha\\Data\\SQL\\Table\\TableBuilder',
+        'Alpha\\Data\\SQL\\QueryBuilder',
+        'Alpha\\Data\\SQL\\Query'
+    ];
+
+    /**
      * Adds to the log
      *
      * @param  object $class   The class calling the logger
@@ -29,11 +54,14 @@ class Logger {
     {
         if (!Config::singleton()->get('LOGGING')) return;
 
+        $class = is_object($class) ? get_class($class) : basename($class);
+
+        if (in_array($class, static::$framework_classes) && !Config::singleton()->get('SHOW_FRAMEWORK_LOGS')) return; // Cancel if log comes from a framework class.
+
         if (empty(static::$log)) {
-            static::$log[] = "<strong>" . static::getTimestamp() . " " . __CLASS__ . "</strong>: Logger enabled.\n";
+            static::$log[] = "<strong>" . static::getTimestamp() . " " . __CLASS__ . "</strong>: Logger enabled.\n"; // Adds this to the log if there has been no prior entries.
         }
 
-        $class = is_object($class) ? get_class($class) : basename($class);
         static::$log[] = "<strong>" . static::getTimestamp() . " {$class}</strong>: {$message}\n";
     }
 
@@ -76,8 +104,26 @@ class Logger {
      */
     private static function getTimestamp()
     {
-        $format = "[F j, Y][G:i:s]";
+        $format = "[F j, Y][G:i:s." . static::milliseconds(true) . "]";
         return date($format, time());
+    }
+
+    /**
+     * Returns milliseconds since unix epoch
+     * @param  boolean $mod Whether to perform ms % 1000 to get ms since last second.
+     * @return int          Milliseconds
+     */
+    private static function milliseconds($mod = false)
+    {
+        $mt = explode(' ', microtime());
+        $val = ((int)$mt[1]) * 1000 + ((int)round($mt[0] * 1000));
+
+        $modval = $val % 1000;
+        if ($modval < 100) $modval = "0" . $modval;
+        else if ($modval < 10) $modval = "00" . $modval;
+        else if ($modval == 0) $modval = "000";
+
+        return ($mod) ? $modval : $val;
     }
 
 }
