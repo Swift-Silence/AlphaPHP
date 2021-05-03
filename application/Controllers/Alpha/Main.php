@@ -2,7 +2,7 @@
 
 namespace Controllers\Alpha;
 
-class Main extends \Alpha\Core\Controller
+class Main extends \AlphaPHP\Controller
 {
 
     public function __construct()
@@ -14,8 +14,7 @@ class Main extends \Alpha\Core\Controller
 
     public function Index($params = [])
     {
-        $this->Model->get('Alpha.Auth');
-        $this->log('test');
+        
     }
 
 }
