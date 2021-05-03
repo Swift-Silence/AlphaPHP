@@ -23,22 +23,16 @@ class Controller
     protected $Request;
 
     /**
-     * Cookie handler object
-     * @var \Alpha\Networking\Request\CookieHandler
-     */
-    protected $Cookie;
-
-    /**
-     * Session handler object
-     * @var \Alpha\Networking\Request\SessionHandler
-     */
-    protected $Session;
-
-    /**
      * Model manager object
      * @var \Alpha\Core\ModelManager
      */
     protected $Model;
+
+    /**
+     * Holds all variables to be used in the frontend view.
+     * @var array
+     */
+    private $vars = [];
 
     /**
      * Initialize dependencies. All child controllers must call parent::__construct()
@@ -56,6 +50,24 @@ class Controller
         Logger::log(__CLASS__, "Dependencies loaded! Executing application...");
         Logger::_(__CLASS__, 3);
     }
+
+    /**
+     * Stores a variable for use in the frontend view.
+     * 
+     * @param string $name Name of the variable. 
+     * @param mixed  $val  Value to be stored.
+     */
+    protected function var(string $name, $val)
+    {
+        $this->vars[$name] = $val;
+    }
+
+    protected function view(string $path = null)
+    {
+        
+    }
+
+
 
     /**
      * Provides easy access to log controller-level messages.
