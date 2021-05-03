@@ -18,7 +18,8 @@ class Main extends \AlphaPHP\Controller
         //$this->log('test');
 
         $this->var('username', 'TAustin2017');
-        $this->view();
+        $this->setView();
+        $this->View->render();
     }
 
 }

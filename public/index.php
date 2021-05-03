@@ -46,7 +46,11 @@ echo "<pre>" . print_r(error_get_last(), true);
  * Run the application
  */
 
-$app = new App();
+try {
+    $app = new App();
+} catch (\AlphaPHP\Exceptions\Exception $e) {
+    $e->dumpLog();
+}
 
 // Debug logger code - Only runs when logging is enabled and only dumps if configuration
 // is set for it.

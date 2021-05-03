@@ -11,6 +11,7 @@ namespace AlphaPHP;
 
 use \AlphaPHP\Core\Model\ModelManager;
 use \AlphaPHP\Core\Networking\Request;
+use \AlphaPHP\Core\View;
 use \AlphaPHP\Debug\Logger;
 
 class Controller
@@ -23,10 +24,19 @@ class Controller
     protected $Request;
 
     /**
+     * Route object, used for getting controller and method names. 
+     *
+     * @var \AlphaPHP\Core\Routing\Route
+     */
+    protected $Route;
+
+    /**
      * Model manager object
      * @var \Alpha\Core\ModelManager
      */
     protected $Model;
+
+    protected $View;
 
     /**
      * Holds all variables to be used in the frontend view.
@@ -47,8 +57,18 @@ class Controller
 
         $this->Model = new ModelManager($this->Request);
 
-        Logger::log(__CLASS__, "Dependencies loaded! Executing application...");
-        Logger::_(__CLASS__, 3);
+        Logger::log(__CLASS__, "Dependencies loaded!");
+    }
+
+    /**
+     * Sets the route object. We need a seperate function for this since we have to call it from the router object. 
+     *
+     * @param \AlphaPHP\Core\Routing\Route $Route
+     * @return void
+     */
+    public function setRoute(\AlphaPHP\Core\Routing\Route $Route)
+    {
+        $this->Route = $Route;
     }
 
     /**
@@ -62,9 +82,13 @@ class Controller
         $this->vars[$name] = $val;
     }
 
-    protected function view(string $path = null)
+    protected function setView(string $path = null)
     {
+        if ($path === null) $path = $this->Route->getController() . "." . $this->Route->getAction();
+        $path = str_replace(['.', '\\'], DS, $path);
+        $path = VIEWS . DS . $path . '.php';
         
+        $this->View = new View($path, $this->vars);
     }
 
 

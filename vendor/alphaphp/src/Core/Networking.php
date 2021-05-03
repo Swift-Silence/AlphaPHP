@@ -1,6 +1,6 @@
 <?php
 
-namespace Alpha;
+namespace AlphaPHP\Core;
 
 /**
  * Networking class

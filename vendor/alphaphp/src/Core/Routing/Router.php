@@ -10,7 +10,7 @@ namespace AlphaPHP\Core\Routing;
 
 use \AlphaPHP\Debug\Logger;
 
-use \AlphaPHP\Networking;
+use \AlphaPHP\Core\Networking;
 
 use \AlphaPHP\Router\Route;
 
@@ -60,6 +60,9 @@ class Router
     {
         if (is_object($this->route))
         {
+            //return $this->route->execute($this->params);
+            $C = $this->route->getControllerObj();
+            $C->setRoute($this->route);
             return $this->route->execute($this->params);
         }
     }
