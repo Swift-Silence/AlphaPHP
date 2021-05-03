@@ -2,7 +2,7 @@
 
 namespace Controllers\Alpha;
 
-class Main extends \Alpha\Core\Controller
+class Main extends \AlphaPHP\Controller
 {
 
     public function __construct()

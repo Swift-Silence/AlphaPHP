@@ -2,10 +2,10 @@
 
 namespace Models\Alpha;
 
-use \Alpha\Data\SQL\Query;
-use \Alpha\Data\SQL\Table;
+use \AlphaPHP\Core\Model\Data\SQL\Query;
+use \AlphaPHP\Core\Model\Data\SQL\Table;
 
-class Auth extends \Alpha\Data\Model
+class Auth extends \AlphaPHP\Model
 {
 
     private $config = [

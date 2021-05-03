@@ -1,0 +1,17 @@
+{
+    "name": "taustin/alphaphp",
+    "description": "PHP Framework",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Tyler Smith",
+            "email": "taustinofficial@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "AlphaPHP\\": "vendor/alphaphp/src"
+        }
+    },
+    "require": {}
+}
