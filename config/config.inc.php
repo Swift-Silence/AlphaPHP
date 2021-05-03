@@ -15,16 +15,13 @@ define('CONFIG', CWD . DS . 'config');
 define('APP', CWD . DS . 'application');
 
 // Controllers Directory
-define('CONTROLLERS', APP . DS . 'controllers');
+define('CONTROLLERS', APP . DS . 'Controllers');
 
 // Models directory
-define('MODELS', APP . DS . 'models');
+define('MODELS', APP . DS . 'Models');
 
 // Views directory
-define('VIEWS', APP . DS . 'views');
-
-// Framework source directory
-define('SRC', CWD . DS . 'src');
+define('VIEWS', APP . DS . 'Views');
 
 // Load the autoloader
 require(CONFIG . DS . 'autoload.inc.php');

@@ -14,8 +14,7 @@ class Main extends \AlphaPHP\Controller
 
     public function Index($params = [])
     {
-        $this->Model->get('Alpha.Auth');
-        $this->log('test');
+        
     }
 
 }

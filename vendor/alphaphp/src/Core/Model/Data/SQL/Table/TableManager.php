@@ -42,7 +42,7 @@ class TableManager
         {
             $this->tables[$table_name] = new Table($table_name, $Model, $options);
         }
-        catch (\Alpha\Exceptions\Exception $e)
+        catch (\AlphaPHP\Exceptions\Exception $e)
         {
             $e->dump(); // Automatically dump any framework exceptions.
         }

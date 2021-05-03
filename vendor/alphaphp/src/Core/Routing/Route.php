@@ -91,13 +91,7 @@ class Route
         return $this->action;
     }
 
-    /**
-     * Executes the route. Called by the framework Router when its execute function
-     * is called.
-     * @param  array  $params Parameters to pass to the controller method.
-     * @return mixed|false    Result of the controller runtime.
-     */
-    public function execute($params)
+    public function getControllerObj()
     {
         Logger::log($this, "Attempting to instantiate controller...");
 
@@ -110,6 +104,19 @@ class Route
             Logger::log($this, "[<b>{$this->path}</b>] Unable to instantiate controller <b>{$this->controller}</b>: " . $e->getMessage() . " [" . $e->getFile() . ":" . $e->getLine() . "]");
             Logger::dump(1);
         }
+
+        return $this->Ctrl;
+    }
+
+    /**
+     * Executes the route. Called by the framework Router when its execute function
+     * is called.
+     * @param  array  $params Parameters to pass to the controller method.
+     * @return mixed|false    Result of the controller runtime.
+     */
+    public function execute($params)
+    {
+        Logger::log($this, "Calling controller action...");
 
         // Use this function to call controllers dynamically
         return call_user_func_array([$this->Ctrl, $this->action], $params);
