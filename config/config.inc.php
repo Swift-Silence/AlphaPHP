@@ -34,7 +34,7 @@ require(CONFIG . DS . 'autoload.inc.php');
 
 
 // Load Config class
-$Config = \Alpha\Core\Config::singleton();
+$Config = \AlphaPHP\Core\Config::singleton();
 
 ## FLAGS ##
 ## P = Best for production
@@ -58,13 +58,13 @@ $Config->set('404_PATH', '/404');
 ## ================= DO NOT EDIT BELOW THIS LINE ========================= ##
 
 
-\Alpha\Debug\Logger::log(__FILE__, "Initial config and autoloaders loaded.");
+\AlphaPHP\Debug\Logger::log(__FILE__, "Initial config and autoloaders loaded.");
 
 // Require the routes.inc.php file, but catch any framework exceptions and dump the log.
 try
 {
     require (CONFIG . DS . 'routes.inc.php');
-} catch (\Alpha\Exceptions\Exception $e)
+} catch (\AlphaPHP\Exceptions\Exception $e)
 {
     $e->dumpLog();
 }
