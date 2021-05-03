@@ -16,7 +16,7 @@ class View
         $this->path = $path;
         $this->vars = $vars;
 
-        $this->log('View manager object instantiated.');
+        $this->log('View object instantiated.');
 
         $this->log('Checking if the view file exists...');
         if (!file_exists($path))
@@ -31,7 +31,18 @@ class View
 
     public function render()
     {
+        $this->log("Rendering view...");
         include($this->path);
+    }
+
+    private function _($path)
+    {
+        $path = str_replace(['\\', '.'], DS, $path);
+        $path = VIEWS . DS . $path . ".php";
+        
+        $this->log("Attempting to load in view dependency <b>{$path}</b>...");
+        $V = new View($path, $this->vars);
+        $V->render();
     }
 
     private function rebaseVars()

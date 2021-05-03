@@ -105,13 +105,19 @@ class DB
     {
         $this->log("Preparing SQL query <b>[$sql] <i>[Data: {{data}}]</i></b>...", true, $data);
 
-        $this->stmt = $this->PDO->prepare($sql);
+        try {
+            $this->stmt = $this->PDO->prepare($sql);
 
-        $this->log("Executing SQL query...", true);
-        $this->stmt->execute($data);
-        $this->log("Query executed.", true);
+            $this->log("Executing SQL query...", true);
+            $this->stmt->execute($data);
+            $this->log("Query executed.", true);
 
-        static::$executed_queries++;
+            static::$executed_queries++;
+        } catch (\Throwable $e) {
+            $this->log("Error preparing query: <b>{$e->getMessage()}</b> [{$e->getFile()}:<b>{$e->getLine()}</b>]");
+            return false;
+        }
+
         return $this->stmt;
     }
 
@@ -124,8 +130,7 @@ class DB
     {
         $sql = "SELECT 1 FROM `{$table_name}` LIMIT 1";
 
-        $this->query($sql);
-        return (bool) $this->stmt;
+        return (bool) $this->query($sql);
     }
 
     /**
@@ -141,8 +146,12 @@ class DB
         //print_r($placeholders);
         $this->query($sql, $placeholders);
 
-        return $this->stmt->fetch()['COUNT(*)'];
-    }
+        //var_dump($this->stmt->errorCode());
+        if ($this->stmt === null) return null;
+
+        if (!$num = $this->stmt->fetch()) return (int) 0;
+        else return $num['COUNT(*)'];
+   }
 
     /**
      * Method for creating a table in the database. Takes cols as an array of objects.
@@ -155,7 +164,24 @@ class DB
         $sql = "CREATE TABLE `$table_name` (";
         foreach ($cols as $col)
         {
-            $sql .= " `{$col->name}` {$col->type}({$col->values})";
+            $sql .= " `{$col->name}` {$col->type}";
+
+            if ($col->values !== null && $col->values) 
+            {
+                if (is_array($col->values))
+                {
+                    $sql .= "(";
+                    foreach ($col->values as $val)
+                    {
+                        $sql .= "'{$val}',";
+                    }
+                    $sql = substr($sql, 0, -1) . ")"; // Trim lastr comma and add closing parenthesis
+                }
+                else 
+                {
+                    $sql .= "({$col->values})";
+                }
+            }
 
             if (!$col->null)    $sql .= " NOT NULL";
             if ($col->primary)  $sql .= " PRIMARY KEY";

@@ -39,7 +39,10 @@ Router::add(
 
 
 
-
+Router::add(
+    new Route('/register', ['Account' => 'Register']),
+    new Route('/login',    ['Account' => 'Login'])
+);
 
 
 

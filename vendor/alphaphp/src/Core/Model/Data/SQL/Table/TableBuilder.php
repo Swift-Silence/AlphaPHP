@@ -1,8 +1,8 @@
 <?php
 
-namespace Alpha\Data\SQL\Table;
+namespace AlphaPHP\Core\Model\Data\SQL\Table;
 
-use \Alpha\Debug\Logger;
+use \AlphaPHP\Debug\Logger;
 
 /**
  * TableBuilder class
@@ -43,7 +43,7 @@ class TableBuilder
      * @param Alpha\Data\SQL\Table $Table Table object
      * @param Alpha\Data\SQL\DB    $DB    Database object
      */
-    public function __construct(\Alpha\Data\SQL\Table $Table, \Alpha\Data\SQL\DB $DB)
+    public function __construct(\AlphaPHP\Core\Model\Data\SQL\Table $Table, \AlphaPHP\Core\Model\Data\DB $DB)
     {
         $this->Table = $Table;
         $this->DB = $DB;
