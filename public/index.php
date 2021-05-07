@@ -39,7 +39,7 @@ define('HTTP_HOST', $http_host);
  */
 
 require(CWD . DS . 'config' . DS . 'config.inc.php');
-echo "<pre>" . print_r(error_get_last(), true);
+//echo "<pre>" . print_r(error_get_last(), true);
 //phdpinfo();
 
 /**
