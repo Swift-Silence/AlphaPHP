@@ -9,6 +9,7 @@ namespace AlphaPHP;
  * well as loading in dependencies usable by developers.
  */
 
+use \AlphaPHP\Core\HTML\HTMLHelperManager as HTMLHelper;
 use \AlphaPHP\Core\Model\ModelManager;
 use \AlphaPHP\Core\Networking\Request;
 use \AlphaPHP\Core\View;
@@ -16,6 +17,8 @@ use \AlphaPHP\Debug\Logger;
 
 class Controller
 {
+
+    protected $HTML;
 
     /**
      * Request object
@@ -56,6 +59,7 @@ class Controller
         $this->Request = new Request();
 
         $this->Model = new ModelManager($this->Request);
+        $this->HTML  = new HTMLHelper();
 
         Logger::log(__CLASS__, "Dependencies loaded!");
     }
@@ -88,10 +92,8 @@ class Controller
         $path = str_replace(['.', '\\'], DS, $path);
         $path = VIEWS . DS . $path . '.php';
         
-        $this->View = new View($path, $this->vars);
+        $this->View = new View($path, $this->vars, $this->HTML);
     }
-
-
 
     /**
      * Provides easy access to log controller-level messages.

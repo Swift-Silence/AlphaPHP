@@ -40,7 +40,7 @@ $Config = \AlphaPHP\Core\Config::singleton();
 // Debug options
 $Config->set('LOGGING', true); # D
 $Config->set('SHOW_FRAMEWORK_LOGS', true); # D
-$Config->set('PRINT_LOG_AFTER_EACH_RUN', true); # D
+$Config->set('PRINT_LOG_AFTER_EACH_RUN', false); # D
 
 // Database settings
 $Config->set('DB_HOST',     '127.0.0.1');

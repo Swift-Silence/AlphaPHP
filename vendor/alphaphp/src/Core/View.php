@@ -7,14 +7,17 @@ use \AlphaPHP\Debug\Logger;
 class View 
 {
 
+    private $HTML;
+
     private $path;
 
     private $vars = [];
 
-    public function __construct(string $path, array $vars)
+    public function __construct(string $path, array $vars, \AlphaPHP\Core\HTML\HTMLHelperManager $HTML)
     {
         $this->path = $path;
         $this->vars = $vars;
+        $this->HTML = $HTML;
 
         $this->log('View object instantiated.');
 
