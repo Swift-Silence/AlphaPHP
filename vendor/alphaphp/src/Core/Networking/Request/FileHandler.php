@@ -4,15 +4,50 @@ namespace AlphaPHP\Core\Networking\Request;
 
 use \AlphaPHP\Core\Config;
 
+/**
+ * Handles file uploads and allows for easy configuration of size and extension limitations.
+ */
 class FileHandler 
 {
 
+    /**
+     * Array of allowed extensions
+     *
+     * @var array
+     */
     private $allowed_extensions = [];
+
+    /**
+     * Config object 
+     *
+     * @var \AlphaPHP\Core\Config
+     */
     private $Config;
+
+    /**
+     * Holds the $_FILES superglobal 
+     *
+     * @var array
+     */
     private $files = [];
+
+    /**
+     * The size limit in bytes 
+     *
+     * @var int
+     */
     private $size_limit;
+
+    /**
+     * Directory to move all uploaded files to.
+     *
+     * @var string
+     */
     private $upload_dir;
 
+    /**
+     * Establish defaults
+     */
     public function __construct()
     {
         $this->files  = $_FILES;
@@ -27,11 +62,22 @@ class FileHandler
         $this->setUploadDir($this->Config->get('FILES/DEFAULT_UPLOAD_DIR'));
     }
 
+    /**
+     * Allow extensions to be uploaded.
+     *
+     * @param string ...$extensions
+     * @return void
+     */
     public function allowExt(...$extensions)
     {
         $this->allowed_extensions = array_merge($extensions, $this->allowed_extensions);
     }
 
+    /**
+     * Dumps all uploaded file info. For debug purposes only.
+     *
+     * @return void
+     */
     public function dump()
     {
         echo "<pre>";
@@ -39,6 +85,13 @@ class FileHandler
         echo "</pre>";
     }
 
+    /**
+     * Returns the size of a file upload 
+     *
+     * @param string $name
+     * @param boolean $bytes
+     * @return void
+     */
     public function getSize($name, $bytes = false)
     {
         if (isset($this->files[$name]))
@@ -73,6 +126,12 @@ class FileHandler
         }
     }
 
+    /**
+     * Establishes a size limit for the uploader. Size can be labeled such as 5GB, 2MB, or 3KB.
+     *
+     * @param mixed $size
+     * @return void
+     */
     public function limitSize($size)
     {
         $l2c = strtolower(substr($size, -2));
@@ -115,6 +174,12 @@ class FileHandler
         }
     }
 
+    /**
+     * Sets the upload directory. Directory must already exist otherwise error will be thrown.
+     *
+     * @param string $upload_dir
+     * @return void
+     */
     public function setUploadDir(string $upload_dir)
     {
         if (!is_dir($upload_dir))
@@ -125,6 +190,12 @@ class FileHandler
         $this->upload_dir = $upload_dir;
     }
 
+    /**
+     * Uploads the file permanently to the server
+     *
+     * @param string $name
+     * @return void
+     */
     public function upload($name)
     {
         if (isset($this->files[$name]))
@@ -164,11 +235,23 @@ class FileHandler
         }
     }
 
+    /**
+     * Used by upload() method to check and make sure the extension is allowed. 
+     *
+     * @param string $ext
+     * @return bool
+     */
     private function checkExt($ext)
     {
         return in_array(strtolower($ext), $this->allowed_extensions);
     }
 
+    /**
+     * Used by upload() method to check and make sure the size is valid.
+     *
+     * @param int $size
+     * @return bool
+     */
     private function checkSize($size)
     {
         return (bool) ($size < $this->size_limit);
