@@ -58,7 +58,7 @@ class Config {
      * @return \Alpha\Core\Config Config object.
      */
     public function set(string $name, $value) {
-        Logger::log($this, "Config option \"<strong>{$name}</strong>\" set to \"<strong>{$value}</strong>\".");
+        //Logger::log($this, "Config option \"<strong>{$name}</strong>\" set to \"<strong>{$value}</strong>\".");
         $this->config[$name] = $value;
         return $this;
     }

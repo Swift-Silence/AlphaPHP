@@ -20,6 +20,9 @@ define('CONTROLLERS', APP . DS . 'Controllers');
 // Models directory
 define('MODELS', APP . DS . 'Models');
 
+// Resources directory 
+define('RESOURCES', CWD . DS . 'resources');
+
 // Views directory
 define('VIEWS', APP . DS . 'Views');
 
@@ -51,6 +54,11 @@ $Config->set('DB_DB',       'alphaphp');
 // Error Handling
 $Config->set('404_PATH', '/404');
 
+// File Handler settings 
+$Config->set('FILES/ALLOWED_EXTENSIONS', ['jpg', 'png', 'jpeg', 'gif']);
+$Config->set('FILES/DEFAULT_UPLOAD_DIR', RESOURCES . DS . 'uploaded');
+$Config->set('FILES/DEFAULT_SIZE_LIMIT', '5MB');
+
 
 ## ================= DO NOT EDIT BELOW THIS LINE ========================= ##
 
@@ -61,7 +69,8 @@ $Config->set('404_PATH', '/404');
 try
 {
     require (CONFIG . DS . 'routes.inc.php');
-} catch (\AlphaPHP\Exceptions\Exception $e)
+} 
+catch (\AlphaPHP\Exceptions\Exception $e)
 {
     $e->dumpLog();
 }
