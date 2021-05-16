@@ -1,3 +1,8 @@
+php_value upload_max_filesize 107374182400
+php_value post_max_size 107374182400
+php_value memory_limit 107374182400
+php_value max_input_time 2000
+
 RewriteEngine on 
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f 
