@@ -13,15 +13,5 @@
         <?= $this->HTML->Form->end(); ?>
 
         <?= $this->HTML->JS->jQuery(); ?>
-        <?= $this->HTML->JS->jQuery(); ?>
-        <?= $this->HTML->JS->jQuery(); ?>
-        <?= $this->HTML->JS->jQuery(); ?>
-        <?= $this->HTML->JS->jQuery(); ?>
-        <?= $this->HTML->JS->jQuery(); ?>
-        <?= $this->HTML->JS->jQuery(); ?>
-        <?= $this->HTML->JS->jQuery(); ?>
-        <?= $this->HTML->JS->jQuery(); ?>
-        <?= $this->HTML->JS->jQuery(); ?>
-        <?= $this->HTML->JS->jQuery(); ?>
     </body>
 </hmtl> 

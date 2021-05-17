@@ -44,7 +44,7 @@ class View
         $path = VIEWS . DS . $path . ".php";
         
         $this->log("Attempting to load in view dependency <b>{$path}</b>...");
-        $V = new View($path, $this->vars);
+        $V = new View($path, $this->vars, $this->HTML);
         $V->render();
     }
 
