@@ -3,17 +3,22 @@
 namespace AlphaPHP\Core\HTML;
 
 use \AlphaPHP\Core\HTML\Helpers\FormHelper;
+use \AlphaPHP\Core\HTML\Helpers\JSHelper;
 
 use \AlphaPHP\Debug\Logger;
 
 class HTMLHelperManager 
 {
 
+    public $Form;
+    public $JS;
+
     public function __construct()
     {
         Logger::log($this, "HTML Helper Manager instantiated.");
 
         $this->Form = new FormHelper();
+        $this->JS   = new JSHelper();
     }
 
 
