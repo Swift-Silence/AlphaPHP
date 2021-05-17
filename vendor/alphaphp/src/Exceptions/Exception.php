@@ -10,10 +10,13 @@ namespace AlphaPHP\Exceptions;
  * filename and line the error was thrown.
  */
 
+use \AlphaPHP\Core\HTML\Flash;
 use \AlphaPHP\Debug\Logger;
 
 class Exception extends \Exception
 {
+
+    protected $Flash;
 
     /**
      * Log error and pass to parent constructor.
@@ -23,6 +26,7 @@ class Exception extends \Exception
      */
     public function __construct($message, $code = 0, $previous = null)
     {
+        $this->Flash = Flash::singleton();
         $file = $this->getFile();
         $line = $this->getLine();
 
@@ -50,6 +54,16 @@ class Exception extends \Exception
     public function dump()
     {
         $this->dumpLog();
+    }
+
+    public function fatal()
+    {
+        $this->Flash->fatal("<b>[{$this->getFile()}:{$this->getLine()}]</b> threw " . get_class($this) . ": [{$this->getCode()}]: {$this->getMessage()}<br/><br/>Stack Trace: {$this->getTraceAsString()}");
+    }
+
+    public function flash()
+    {
+        $this->Flash->error("<b>[{$this->getFile()}:{$this->getLine()}]</b> threw " . get_class($this) . ": [{$this->getCode()}]: {$this->getMessage()}<br/><br/>Stack Trace: {$this->getTraceAsString()}");
     }
 
 }

@@ -3,17 +3,22 @@
 namespace AlphaPHP\Core\HTML;
 
 use \AlphaPHP\Core\HTML\Helpers\FormHelper;
+use \AlphaPHP\Core\HTML\Helpers\JSHelper;
 
 use \AlphaPHP\Debug\Logger;
 
 class HTMLHelperManager 
 {
 
+    public $Form;
+    public $JS;
+
     public function __construct()
     {
         Logger::log($this, "HTML Helper Manager instantiated.");
 
         $this->Form = new FormHelper();
+        $this->JS   = new JSHelper();
     }
 
 
@@ -48,6 +53,13 @@ class HTMLHelperManager
         $HTML .= ">{$text}</a>\n"; // Add link text and closing anchor tag
 
         return $HTML;
+    }
+
+    public function stylesheet($name)
+    {
+        $full_path = URL . '/css/' . $name . '.css';
+
+        return "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$full_path}\" />\n";
     }
 
 }

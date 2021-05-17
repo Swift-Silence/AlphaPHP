@@ -1,3 +1,5 @@
 /.recycle_bin
 /public/img/*
 /.vs
+
+!/public/img/Alpha

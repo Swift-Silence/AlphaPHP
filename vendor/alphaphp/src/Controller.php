@@ -9,6 +9,7 @@ namespace AlphaPHP;
  * well as loading in dependencies usable by developers.
  */
 
+use \AlphaPHP\Core\HTML\Flash;
 use \AlphaPHP\Core\HTML\HTMLHelperManager as HTMLHelper;
 use \AlphaPHP\Core\Model\ModelManager;
 use \AlphaPHP\Core\Networking\Request;
@@ -17,6 +18,8 @@ use \AlphaPHP\Debug\Logger;
 
 class Controller
 {
+
+    protected $Flash;
 
     protected $HTML;
 
@@ -60,6 +63,7 @@ class Controller
 
         $this->Model = new ModelManager($this->Request);
         $this->HTML  = new HTMLHelper();
+        $this->Flash = Flash::singleton();
 
         Logger::log(__CLASS__, "Dependencies loaded!");
     }

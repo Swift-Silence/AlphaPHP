@@ -3,6 +3,7 @@
 namespace AlphaPHP\Core\Model\Data;
 
 use \AlphaPHP\Core\Config;
+use \AlphaPHP\Core\HTML\Flash;
 use \AlphaPHP\Debug\Logger;
 
 /**
@@ -69,6 +70,8 @@ class DB
      */
     private $stmt;
 
+    private $Flash;
+
     public static $executed_queries = 0;
 
     /**
@@ -86,12 +89,13 @@ class DB
         $this->password =   $Config->get('DB_PASSWORD');
         $this->db =         $Config->get('DB_DB');
 
+        $this->Flash = Flash::singleton();
+
         // Attempt connection
         try {
             $this->connect();
         } catch (\Throwable $e) {
-            $this->log("Error connecting to database: " . $e->getMessage() . ' [' . $e->getFile() . ':' . $e->getLine() . ']');
-            Logger::dump(true);
+            $this->Flash->fatal("<b>[{$e->getFile()}:{$e->getLine()}]</b> threw " . get_class($e) . ": [{$e->getCode()}]: {$e->getMessage()}<br/><br/>Stack Trace: {$e->getTraceAsString()}");
         }
     }
 
@@ -114,8 +118,7 @@ class DB
 
             static::$executed_queries++;
         } catch (\Throwable $e) {
-            $this->log("Error preparing query: <b>{$e->getMessage()}</b> [{$e->getFile()}:<b>{$e->getLine()}</b>]");
-            return false;
+            $this->Flash->fatal("<b>[{$e->getFile()}:{$e->getLine()}]</b> threw " . get_class($e) . ": [{$e->getCode()}]: {$e->getMessage()}<br/><br/>Stack Trace: {$e->getTraceAsString()}");
         }
 
         return $this->stmt;
