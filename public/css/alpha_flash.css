@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+#alpha-flash-module, .alpha-flash-box, p {
+    margin: 0;
+    padding: 0;
+}
+
+#alpha-flash-module {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 25%;
+
+    display: flex;
+    flex: 1;
+    flex-direction: column-reverse;
+
+    font-family: 'Roboto';
+}
+
+#alpha-flash-module > .alpha-flash-box {
+    margin: .5em;
+    margin-right: 1em;
+    padding: 1em;
+
+    border-radius: 3px;
+
+    cursor: pointer;
+
+    display: flex;
+    flex-direction: row;
+}
+
+#alpha-flash-module > .alpha-flash-box.flash-error {
+    background-color: rgba(200, 50, 50, 0.9);
+    box-shadow: 3px 3px rgba(126, 0, 0, 0.9);
+    transition: all .1s ease-in-out;
+    color: #fff;
+}
+
+#alpha-flash-module > .alpha-flash-box.flash-notification {
+    background-color: rgba(57, 57, 255, 0.9);
+    box-shadow: 3px 3px rgba(0, 0, 148, 0.9);
+    transition: all .1s ease-in-out;
+    color: #fff;
+}
+
+#alpha-flash-module > .alpha-flash-box.flash-success {
+    background-color: rgba(55, 158, 29, 0.9);
+    box-shadow: 3px 3px rgba(20, 102, 0, 0.9);
+    transition: all .1s ease-in-out;
+    color: #fff;
+}
+
+#alpha-flash-module > .alpha-flash-box.flash-error:hover {
+    background-color: rgba(200, 50, 50, 1);
+}
+
+#alpha-flash-module > .alpha-flash-box.flash-notification:hover {
+    background-color: rgba(57, 57, 255, 1);
+}
+
+#alpha-flash-module > .alpha-flash-box.flash-success:hover {
+    background-color: rgba(55, 158, 29, 1);
+}
+
+#alpha-flash-module > .alpha-flash-box > p {
+    align-self: center;
+}
+
+#alpha-flash-module > .alpha-flash-box > .flash-box-icon {
+    width: 2em;
+    height: 2em;
+    margin-right: 1em;
+    align-self:stretch;
+}
+
+#alpha-flash-module:last-child {
+    margin-bottom: 1em;
+}

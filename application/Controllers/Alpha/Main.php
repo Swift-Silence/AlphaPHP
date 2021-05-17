@@ -9,7 +9,7 @@ class Main extends \AlphaPHP\Controller
     {
         parent::__construct();
 
-        #
+        $this->Model->get('Alpha.Auth');
     }
 
     public function Index($params = [])

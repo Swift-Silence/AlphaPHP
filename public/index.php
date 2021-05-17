@@ -3,8 +3,9 @@
 require(dirname(__DIR__) . '/vendor/autoload.php');
 
 use \AlphaPHP\Core\App;
+use \AlphaPHP\Core\HTML\Flash;
 
-
+$Flash = Flash::singleton();
 
 // Begin PHP sessions 
 session_start();
@@ -53,7 +54,9 @@ require(CWD . DS . 'config' . DS . 'config.inc.php');
 try {
     $app = new App();
 } catch (\AlphaPHP\Exceptions\Exception $e) {
-    $e->dumpLog();
+    $e->fatal();
+} catch (\Throwable $e) {
+    $Flash->fatal("<b>[{$e->getFile()}:{$e->getLine()}]</b> threw " . get_class($e) . ": [{$e->getCode()}]: {$e->getMessage()}<br/><br/>Stack Trace: {$e->getTraceAsString()}");
 }
 
 // Debug logger code - Only runs when logging is enabled and only dumps if configuration
