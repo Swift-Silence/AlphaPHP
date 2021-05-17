@@ -3,6 +3,7 @@
 namespace AlphaPHP\Core\Networking;
 
 use \AlphaPHP\Core\Networking\Request\CookieHandler;
+use \AlphaPHP\Core\Networking\Request\FileHandler;
 use \AlphaPHP\Core\Networking\Request\SessionHandler;
 use \AlphaPHP\Debug\Logger;
 
@@ -18,6 +19,8 @@ class Request
     public $Session;
 
     public $Cookie;
+
+    public $File;
 
     /**
      * Holds all POST data.
@@ -41,6 +44,7 @@ class Request
         $this->getRequests();
         $this->Session = new SessionHandler();
         $this->Cookie  = new CookieHandler();
+        $this->File    = new FileHandler();
     }
 
     /**
