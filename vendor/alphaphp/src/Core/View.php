@@ -2,10 +2,13 @@
 
 namespace AlphaPHP\Core;
 
+use \AlphaPHP\Core\HTML\Flash;
 use \AlphaPHP\Debug\Logger;
 
 class View 
 {
+
+    private $Flash;
 
     private $HTML;
 
@@ -13,11 +16,12 @@ class View
 
     private $vars = [];
 
-    public function __construct(string $path, array $vars, \AlphaPHP\Core\HTML\HTMLHelperManager $HTML)
+    public function __construct(string $path, array $vars = [], $HTML = null)
     {
         $this->path = $path;
         $this->vars = $vars;
         $this->HTML = $HTML;
+        $this->Flash = Flash::singleton();
 
         $this->log('View object instantiated.');
 
