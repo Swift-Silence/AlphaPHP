@@ -59,6 +59,11 @@ $Config->set('FILES/ALLOWED_EXTENSIONS', ['jpg', 'png', 'jpeg', 'gif']);
 $Config->set('FILES/DEFAULT_UPLOAD_DIR', RESOURCES . DS . 'uploaded');
 $Config->set('FILES/DEFAULT_SIZE_LIMIT', '5MB');
 
+// Flash Error/Notification/Success settings 
+$Config->set('FLASH/SUCCESS_COLOR', "#00FF00"); // Green
+$Config->set('FLASH/NOTIFICATION_COLOR', "#0000FF"); // Blue
+$Config->set('FLASH/ERROR_COLOR', "#FF0000"); // Red
+
 
 ## ================= DO NOT EDIT BELOW THIS LINE ========================= ##
 

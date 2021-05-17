@@ -55,4 +55,11 @@ class HTMLHelperManager
         return $HTML;
     }
 
+    public function stylesheet($name)
+    {
+        $full_path = URL . '/css/' . $name . '.css';
+
+        return "<link rel=\"stylesheet\" type=\"text/css\" href=\"{$full_path}\" />\n";
+    }
+
 }
