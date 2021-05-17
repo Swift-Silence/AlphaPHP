@@ -64,7 +64,6 @@ $Config->set('FLASH/SUCCESS_COLOR', "#00FF00"); // Green
 $Config->set('FLASH/NOTIFICATION_COLOR', "#0000FF"); // Blue
 $Config->set('FLASH/ERROR_COLOR', "#FF0000"); // Red
 
-
 ## ================= DO NOT EDIT BELOW THIS LINE ========================= ##
 
 
