@@ -225,7 +225,7 @@ class Table
         try {
             return (bool) $this->DB->hasTable($this->getSQLTableName());
         } catch (\Throwable $e) {
-            $this->log("Error thrown in <b>" . $e->getFile() . "</b> line <b>" . $e->getLine() . "</b>. <i>" . $e->getMessage() . "</i>");
+            $this->Flash->notification("<b>[{$e->getFile()}:{$e->getLine()}]</b> threw " . get_class($e) . ": [{$e->getCode()}]: {$e->getMessage()}<br/><br/>Stack Trace: {$e->getTraceAsString()}");
         }
     }
 

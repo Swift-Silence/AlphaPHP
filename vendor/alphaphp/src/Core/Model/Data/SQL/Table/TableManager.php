@@ -44,7 +44,7 @@ class TableManager
         }
         catch (\AlphaPHP\Exceptions\Exception $e)
         {
-            $e->dump(); // Automatically dump any framework exceptions.
+            $e->flash(); // Automatically flash any framework exceptions.
         }
 
         return $this->tables[$table_name];

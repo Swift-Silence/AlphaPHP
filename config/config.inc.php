@@ -77,5 +77,5 @@ try
 } 
 catch (\AlphaPHP\Exceptions\Exception $e)
 {
-    $e->dumpLog();
+    $e->fatal();
 }

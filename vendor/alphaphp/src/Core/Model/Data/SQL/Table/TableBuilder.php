@@ -82,12 +82,7 @@ class TableBuilder
     {
         $this->log("Attempting to create MySQL table...");
 
-        try {
-            $this->DB->createTable($this->name, $this->cols);
-        } catch (\Throwable $e) {
-            $this->log("Exception thrown in <b>" . $e->getFile() . "</b> line <b>" . $e->getLine() . "</b>. <i>" . $e->getMessage() . "</i>");
-            Logger::dump(true);
-        }
+        $this->DB->createTable($this->name, $this->cols);
 
         $this->log("Table <b>`{$this->name}`</b> created successfully.");
         return true;
