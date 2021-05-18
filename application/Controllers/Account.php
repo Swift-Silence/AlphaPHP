@@ -17,6 +17,9 @@ class Account extends \AlphaPHP\Controller
 
         
 
+        $this->setView();
+        $this->View->render();
+
     }
 
 }

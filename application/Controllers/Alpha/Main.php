@@ -21,6 +21,8 @@ class Main extends \AlphaPHP\Controller
         //echo $this->Request->File->dump();
         echo $this->Request->File->getSize('myfile');
 
+        $this->Flash->notification("I'm a princess");
+
         $this->setView();
         $this->View->render();
     }
